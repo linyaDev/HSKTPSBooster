@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>HSK TPS Booster</name>
+	<author>linyaDev</author>
+	<supportedVersions>
+		<li>1.6</li>
+		<li>1.7</li>
+	</supportedVersions>
+	<packageId>linya.hsktpsbooster</packageId>
+	<description>
+[English]
+Makes HSK run faster.
+But let's play until you get to the point where you notice lag, then install Performance Optimizer and Missile Girl, and if you still have lag, then use my mod. If you still have lag, post in the thread and attach a save.
+		
+- Higher TPS, especially in big colonies
+- Several bug fixes
+- A new interactive map mode
+
+Everything can be switched on and off in the mod settings.
+
+[Russian]
+Ускоряет работу HSK.
+Но давайе вы вначале доиграте до лагов, потом поставите Performance Optimizer и Missile Girl и если все равно есть лаги , то уже мой мод. Если лаги все еще есть , пишите в тему  - прикрепрляйте сейв.
+
+		
+- Выше TPS, особенно в больших колониях
+- Несколько исправлений ошибок
+- Новый интерактивный режим карты
+
+Всё включается и выключается в настройках мода.
+	</description>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+		</li>
+		<li>
+			<packageId>Taranchuk.PerformanceOptimizer</packageId>
+			<displayName>Performance Optimizer</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2664723367</steamWorkshopUrl>
+		</li>
+		<li>
+			<packageId>vr.missilegirl</packageId>
+			<displayName>Missile Girl - Performance Mod</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/3712928623</steamWorkshopUrl>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+		<li>Ludeon.RimWorld</li>
+		<!-- Грузимся последними из перф-модов: наши хуки ложатся поверх их патчей -->
+		<li>Taranchuk.PerformanceOptimizer</li>
+		<li>vr.missilegirl</li>
+	</loadAfter>
+</ModMetaData>
