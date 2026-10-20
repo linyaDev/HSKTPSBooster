@@ -32,25 +32,25 @@ namespace HSKPerformance
                     var c = ProbeConfig.Load();
                     c.LightMode = !c.LightMode;
                     c.Save();
-                    Log.Message("[HSK TPS Booster] light mode " + (c.LightMode ? "ON" : "OFF") + " (Ctrl+F8), applies to the next recording.");
+                    PerfLog.Info("light mode " + (c.LightMode ? "ON" : "OFF") + " (Ctrl+F8), applies to the next recording.");
                     ProbeSession.Notify("Лёгкий режим " + (c.LightMode ? "включён: хукаются корни и методы кадра, почти без нагрузки." : "выключен: полный замер."), 8);
                 }
                 if (ctrl && Input.GetKeyDown(KeyCode.F10))
                 {
                     string msg = WorldPawnDump.WriteStandalone();
                     if (msg == null) msg = "World pawn dump is only available inside a running game.";
-                    else Log.Message("[HSK TPS Booster] " + msg);
-                    Log.Message("[HSK TPS Booster] flecks on the current map: " + FleckCensus.Describe(20));
-                    Log.Message("[HSK TPS Booster] drawing: " + DrawCensus.Describe(20));
+                    else PerfLog.Info(msg);
+                    PerfLog.Info("flecks on the current map: " + FleckCensus.Describe(20));
+                    PerfLog.Info("drawing: " + DrawCensus.Describe(20));
                     string live = PerfFixes.LiveStatus();
-                    if (live.Length > 0) Log.Message("[HSK TPS Booster] " + live);
+                    if (live.Length > 0) PerfLog.Info(live);
                     ProbeSession.Notify(msg + (live.Length > 0 ? "   |   " + live : ""));
                 }
                 ProbeSession.OnFrame(Time.unscaledDeltaTime, Time.realtimeSinceStartup);
             }
             catch (Exception e)
             {
-                Log.Error("[HSK TPS Booster] driver error: " + e);
+                PerfLog.Error("driver error: " + e);
                 ProbeSession.Abort(e.Message);
             }
         }
@@ -87,7 +87,8 @@ namespace HSKPerformance
             go.AddComponent<ProbeDriver>();
             FramePhases.Install(go);
             FpsTpsCounter.DetectDubs();
-            Log.Message("[HSK TPS Booster] ready. Ctrl+F9 = start/stop a capture, Ctrl+F10 = list what is ticked (world pawns, world objects, things on the maps). Reports go to " + ProbeConfig.Dir);
+            PerfLog.Verbose = ProbeConfig.Load().LogVerbose;
+            PerfLog.Info("ready. Ctrl+F9 = start/stop a capture, Ctrl+F10 = list what is ticked (world pawns, world objects, things on the maps). Reports go to " + ProbeConfig.Dir);
             PerfFixes.Init();
         }
     }

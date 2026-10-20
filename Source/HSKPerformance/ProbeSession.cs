@@ -105,12 +105,12 @@ namespace HSKPerformance
                 LastMessage = "";
                 hadCaptureData = false;
                 State = SessionState.Installing;
-                Log.Message("[HSK TPS Booster] catalog built: " + HookCatalog.Targets.Count + " hooks in "
+                PerfLog.Info("catalog built: " + HookCatalog.Targets.Count + " hooks in "
                     + HookCatalog.BuildMs.ToString("F0", CultureInfo.InvariantCulture) + " ms. Installing over several frames...");
             }
             catch (Exception e)
             {
-                Log.Error("[HSK TPS Booster] failed to start: " + e);
+                PerfLog.Error("failed to start: " + e);
                 Abort("start failed: " + e.Message);
             }
         }
@@ -181,7 +181,7 @@ namespace HSKPerformance
             warmEndReal = now + Cfg.WarmupSeconds;
             CaptureStartReal = now;
             State = SessionState.Warmup;
-            Log.Message("[HSK TPS Booster] mode: " + (Cfg.LightMode ? "LIGHT (vanilla roots and per-frame internals)" : "FULL (all hooks)") + ". hooks installed: " + HookCatalog.PatchedOk + " ok, " + HookCatalog.PatchedFail + " failed ("
+            PerfLog.Info("mode: " + (Cfg.LightMode ? "LIGHT (vanilla roots and per-frame internals)" : "FULL (all hooks)") + ". hooks installed: " + HookCatalog.PatchedOk + " ok, " + HookCatalog.PatchedFail + " failed ("
                 + HookCatalog.InstallMs.ToString("F0", CultureInfo.InvariantCulture) + " ms of patching). Warming up "
                 + Cfg.WarmupSeconds + " s, then recording " + Cfg.DurationSeconds + " s (Ctrl+F9 stops early).");
             if (Cfg.WarmupSeconds <= 0) BeginCapture(now);
@@ -263,12 +263,12 @@ namespace HSKPerformance
                     EndContext = ProbeReport.Context();
                     string dir = ProbeReport.Write();
                     LastMessage = "Report saved: " + dir;
-                    Log.Message("[HSK TPS Booster] " + LastMessage);
+                    PerfLog.Info(LastMessage);
                 }
                 catch (Exception e)
                 {
                     LastMessage = "Report failed: " + e.Message;
-                    Log.Error("[HSK TPS Booster] report failed: " + e);
+                    PerfLog.Error("report failed: " + e);
                 }
             }
             else
@@ -289,7 +289,7 @@ namespace HSKPerformance
         {
             if (!chainNext) { if (Phase == 2) LastMessage = "Both recordings are saved (light, then full). " + LastMessage; Phase = 0; return; }
             chainNext = false;
-            Log.Message("[HSK TPS Booster] light half done, starting the full half.");
+            PerfLog.Info("light half done, starting the full half.");
             StartPhase(2);
         }
 
@@ -329,7 +329,7 @@ namespace HSKPerformance
             State = SessionState.Idle;
             // safety net: anything of ours that is still attached (e.g. after an error) goes now
             try { harmony.UnpatchAll(ProbeCore.HarmonyId); } catch { }
-            Log.Message("[HSK TPS Booster] hooks removed.");
+            PerfLog.Info("hooks removed.");
             OnIdle();
         }
 

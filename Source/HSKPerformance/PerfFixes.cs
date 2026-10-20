@@ -35,6 +35,7 @@ namespace HSKPerformance
         /// <summary>Applies the fix switches of a config right away (called by the mod settings window).</summary>
         public static void Reload(ProbeConfig cfg)
         {
+            PerfLog.Verbose = cfg.LogVerbose;
             RotStorageFix.Enabled = cfg.FixRotStorage;
             PawnEffectsFix.Enabled = cfg.FixPawnEffects;
             PawnEffectsFix.MinSpeed = cfg.PawnEffectsMinSpeed;
@@ -52,7 +53,7 @@ namespace HSKPerformance
             string line = "fixes switched from settings: rot storage " + (cfg.FixRotStorage ? "ON" : "off") + ", pawn effects/wreck smoke " + (cfg.FixPawnEffects ? "ON" : "off") + ", interactive map with marker colors " + (cfg.FixFarMap ? "ON" : "off")
                 + " (from speed " + cfg.PawnEffectsMinSpeed.ToString(CultureInfo.InvariantCulture) + "), mothball hediffs " + (cfg.FixMothballHediffs ? "ON" : "off");
             Status.Add(line);
-            try { Verse.Log.Message("[HSK TPS Booster] " + line); } catch { }
+            PerfLog.Info(line);
         }
 
         public static void Init()
@@ -60,6 +61,7 @@ namespace HSKPerformance
             try
             {
                 var cfg = ProbeConfig.Load();
+                PerfLog.Verbose = cfg.LogVerbose;
                 var harmony = new Harmony(HarmonyId);
                 // Patches are installed whatever the config says and only gated by a live flag, so the settings window can switch every fix
                 // on and off without restarting the game (Reload below).
@@ -75,9 +77,9 @@ namespace HSKPerformance
             catch (Exception e)
             {
                 Status.Add("fix init failed: " + e.Message);
-                Verse.Log.Error("[HSK TPS Booster] fix init failed: " + e);
+                PerfLog.Error("fix init failed: " + e);
             }
-            foreach (var s in Status) Verse.Log.Message("[HSK TPS Booster] " + s);
+            foreach (var s in Status) PerfLog.Info(s);
         }
     }
 
@@ -347,7 +349,7 @@ namespace HSKPerformance
         {
             disabled = true;
             PerfFixes.Status.Add("rot storage fix: SWITCHED OFF after " + verified + " checked calls: " + why);
-            Verse.Log.Error("[HSK TPS Booster] rot storage fix switched off: " + why);
+            PerfLog.Error("rot storage fix switched off: " + why);
         }
 
         static void FinishVerification()
@@ -357,7 +359,7 @@ namespace HSKPerformance
                 + (slowTicks * f).ToString("F1", CultureInfo.InvariantCulture) + " us per call vs fast "
                 + (fastTicks * f).ToString("F2", CultureInfo.InvariantCulture) + " us";
             if (!disabled) PerfFixes.Status.Add(s);
-            Verse.Log.Message("[HSK TPS Booster] " + s);
+            PerfLog.Info(s);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace HSKPerformance
     {
         ProbeConfig cfg;
         Vector2 scroll;
-        bool sRot, sMap, sEff, sMoth, sBadge, sCam, sFps; // what was last applied, to notice a click
+        bool sRot, sMap, sEff, sMoth, sBadge, sCam, sFps, sLog; // what was last applied, to notice a click
 
         public HSKPerformanceMod(ModContentPack content) : base(content) { }
 
@@ -22,7 +22,7 @@ namespace HSKPerformance
         {
             if (cfg != null) return;
             cfg = ProbeConfig.Load();
-            sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps;
+            sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose;
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -62,10 +62,12 @@ namespace HSKPerformance
 
             l.CheckboxLabeled("Счётчик FPS / TPS в углу экрана", ref cfg.ShowFpsTps,
                 "Небольшой счётчик кадров и тиков в правом верхнем углу (как в Dubs Performance Analyzer). Автоматически не показывается, если включён Dubs Performance Analyzer." + (FpsTpsCounter.Available ? "" : " Сейчас скрыт: Dubs Performance Analyzer активен."));
+            l.CheckboxLabeled("Подробный лог в консоль", ref cfg.LogVerbose,
+                "По умолчанию мод пишет в консоль только ошибки. Включите, если нужны информационные сообщения (статус фиксов при запуске, ход записи профиля).");
 
-            if (cfg.FixRotStorage != sRot || cfg.FixFarMap != sMap || cfg.FixPawnEffects != sEff || cfg.FixMothballHediffs != sMoth || cfg.MarkerBadges != sBadge || cfg.FixCameraCache != sCam || cfg.ShowFpsTps != sFps)
+            if (cfg.FixRotStorage != sRot || cfg.FixFarMap != sMap || cfg.FixPawnEffects != sEff || cfg.FixMothballHediffs != sMoth || cfg.MarkerBadges != sBadge || cfg.FixCameraCache != sCam || cfg.ShowFpsTps != sFps || cfg.LogVerbose != sLog)
             {
-                sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps;
+                sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose;
                 cfg.Save();
                 PerfFixes.Reload(cfg);
             }

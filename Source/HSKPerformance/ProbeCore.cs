@@ -8,6 +8,19 @@ using Verse;
 
 namespace HSKPerformance
 {
+    /// <summary>
+    /// Console logging gate. Informational lines (Info) are written only when log_verbose is on, so the console stays
+    /// clean in normal play. Warnings and errors always go through — they only fire on an actual problem.
+    /// </summary>
+    public static class PerfLog
+    {
+        public static bool Verbose;
+        const string Tag = "[HSK TPS Booster] ";
+        public static void Info(string msg) { if (Verbose) { try { Verse.Log.Message(Tag + msg); } catch { } } }
+        public static void Warn(string msg) { try { Verse.Log.Warning(Tag + msg); } catch { } }
+        public static void Error(string msg) { try { Verse.Log.Error(Tag + msg); } catch { } }
+    }
+
     /// <summary>One profiled method. All times are Stopwatch ticks.</summary>
     public sealed class Slot
     {
