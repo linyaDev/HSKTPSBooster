@@ -34,9 +34,15 @@ namespace HSKPerformance
         static int lastClear;
         static long hits, misses;
 
+        // self-check: for the first verifyLeft serve-eligible calls, run the original too and confirm the cached tool matches
+        static int verifyLeft, verified, mismatches;
+        static bool verifyPending;
+        static object verifyCandidate;
+
         public static void Apply(Harmony harmony, ProbeConfig cfg)
         {
             Enabled = cfg.FixSurvivalToolCache;
+            verifyLeft = cfg.FixSurvivalToolVerifyCalls;
             var type = AccessTools.TypeByName("SurvivalToolsLite.SurvivalToolUtility");
             var target = type == null ? null : AccessTools.Method(type, "GetBestSurvivalTool", new[] { typeof(Pawn), typeof(StatDef) });
             if (target == null)
@@ -55,7 +61,8 @@ namespace HSKPerformance
                     prefix: new HarmonyMethod(typeof(SurvivalToolCacheFix).GetMethod("Prefix", BindingFlags.Static | BindingFlags.NonPublic)) { priority = Priority.First },
                     postfix: new HarmonyMethod(typeof(SurvivalToolCacheFix).GetMethod("Postfix", BindingFlags.Static | BindingFlags.NonPublic)));
                 Installed = true;
-                PerfFixes.Status.Add("survival tool cache: " + (Enabled ? "active" : "installed but OFF (settings / config.txt)") + " (best-tool-per-stat cached for " + RefreshTicks + " ticks)");
+                PerfFixes.Status.Add("survival tool cache: " + (Enabled ? "active" : "installed but OFF (settings / config.txt)") + " (best-tool-per-stat cached for " + RefreshTicks + " ticks)"
+                    + (verifyLeft > 0 ? "; self-check on the first " + verifyLeft + " serve-eligible calls" : "; no self-check"));
             }
             catch (Exception e)
             {
@@ -66,7 +73,7 @@ namespace HSKPerformance
         public static string Live()
         {
             long total = hits + misses;
-            return "survival tool cache live: " + hits + " hits / " + total + " calls" + (disabled ? ", SWITCHED OFF" : "");
+            return "survival tool cache live: " + hits + " hits / " + total + " calls, self-check " + verified + " done / " + verifyLeft + " left, " + mismatches + " mismatches" + (disabled ? ", SWITCHED OFF" : "");
         }
 
         static int CurTick()
@@ -75,9 +82,25 @@ namespace HSKPerformance
             catch { return 0; }
         }
 
-        // Return false (skip original, use cached result) only on a fresh, still-valid hit.
+        /// <summary>True when a fresh, non-destroyed entry exists that the fast path would serve; outputs the cached tool.</summary>
+        static bool WouldServe(Pawn pawn, StatDef stat, int now, out object tool)
+        {
+            tool = null;
+            Dictionary<StatDef, Entry> byStat;
+            if (!cache.TryGetValue(pawn, out byStat)) return false;
+            Entry e;
+            if (!byStat.TryGetValue(stat, out e) || now - e.Tick >= RefreshTicks) return false;
+            var t = e.Tool as Thing;
+            if (e.Tool != null && (t == null || t.Destroyed)) return false;   // never serve a destroyed tool
+            tool = e.Tool;
+            return true;
+        }
+
+        // Return false (skip original, use cached result) only on a fresh hit — but while self-checking, always let the
+        // original run so the postfix can compare the cached answer against it.
         static bool Prefix(Pawn pawn, StatDef stat, ref object __result)
         {
+            verifyPending = false;
             if (disabled || !Enabled || pawn == null || stat == null) return true;
             if (Environment.CurrentManagedThreadId != ProbeCore.MainThreadId) return true;
             try
@@ -85,23 +108,19 @@ namespace HSKPerformance
                 int now = CurTick();
                 if (now - lastClear > ClearEvery || cache.Count > 4000) { cache.Clear(); lastClear = now; }
 
-                Dictionary<StatDef, Entry> byStat;
-                if (cache.TryGetValue(pawn, out byStat))
+                object tool;
+                bool serve = WouldServe(pawn, stat, now, out tool);
+                if (!serve) { misses++; return true; }
+
+                if (verifyLeft > 0)   // run the original too and compare in the postfix; do not skip it
                 {
-                    Entry e;
-                    if (byStat.TryGetValue(stat, out e) && now - e.Tick < RefreshTicks)
-                    {
-                        var t = e.Tool as Thing;
-                        if (e.Tool == null || (t != null && !t.Destroyed))   // never serve a destroyed tool
-                        {
-                            __result = e.Tool;
-                            hits++;
-                            return false;
-                        }
-                    }
+                    verifyPending = true;
+                    verifyCandidate = tool;
+                    return true;
                 }
-                misses++;
-                return true;
+                __result = tool;      // trusted fast path
+                hits++;
+                return false;
             }
             catch (Exception ex)
             {
@@ -116,6 +135,21 @@ namespace HSKPerformance
             if (Environment.CurrentManagedThreadId != ProbeCore.MainThreadId) return;
             try
             {
+                if (verifyPending)
+                {
+                    verifyPending = false;
+                    verified++;
+                    if (!ReferenceEquals(verifyCandidate, __result))
+                    {
+                        mismatches++;
+                        if (mismatches <= 5)
+                            PerfLog.Warn("survival tool cache MISMATCH for " + pawn + " / " + stat.defName + ": original="
+                                + (__result ?? (object)"none") + ", cached=" + (verifyCandidate ?? (object)"none"));
+                        if (mismatches >= 3) Disable("3 mismatches between the cache and the original");
+                    }
+                    if (--verifyLeft == 0) FinishVerification();
+                }
+
                 Dictionary<StatDef, Entry> byStat;
                 if (!cache.TryGetValue(pawn, out byStat)) { byStat = new Dictionary<StatDef, Entry>(); cache[pawn] = byStat; }
                 Entry e;
@@ -124,6 +158,13 @@ namespace HSKPerformance
                 e.Tool = __result;
             }
             catch (Exception ex) { Disable("exception (store): " + ex.GetType().Name + ": " + ex.Message); }
+        }
+
+        static void FinishVerification()
+        {
+            string s = "survival tool cache: self-check finished, " + verified + " checks, " + mismatches + " mismatches";
+            if (!disabled) PerfFixes.Status.Add(s);
+            PerfLog.Info(s);
         }
 
         static void Disable(string why)
