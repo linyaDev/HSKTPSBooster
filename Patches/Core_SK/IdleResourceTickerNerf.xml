@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+	<!-- Idle Normal-ticker resources (HSK TPS Booster).
+	     Peat, Charcoal and UraniumBoulder are Core SK items/mineables with tickerType Normal
+	     but no per-tick code of their own (the profiler flags them as "idle"): every stack calls
+	     Tick() on EVERY tick and does nothing with it. Deterioration is handled map-side by
+	     SteadyEnvironmentEffects, not by the item's own tick, so dropping them to Rare (tick every
+	     250 ticks) changes nothing in behaviour and removes the per-tick dispatch.
+	     On a measured 164-stack peat pile this was ~6 ms/s of pure waste.
+	     Guarded by Core SK so the patch does nothing (no errors) when that mod is absent. -->
+	<Operation Class="PatchOperationFindMod">
+		<mods><li>Core SK</li></mods>
+		<match Class="PatchOperationSequence">
+			<operations>
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName="Peat"]/tickerType</xpath>
+					<value><tickerType>Rare</tickerType></value>
+				</li>
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName="Charcoal"]/tickerType</xpath>
+					<value><tickerType>Rare</tickerType></value>
+				</li>
+				<li Class="PatchOperationReplace">
+					<xpath>Defs/ThingDef[defName="UraniumBoulder"]/tickerType</xpath>
+					<value><tickerType>Rare</tickerType></value>
+				</li>
+			</operations>
+		</match>
+	</Operation>
+</Patch>
