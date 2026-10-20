@@ -29,6 +29,7 @@ namespace HSKPerformance
             if (PawnEffectsFix.Installed) s = (s.Length > 0 ? s + "   |   " : "") + PawnEffectsFix.Live();
             if (FarMap.Installed) s = (s.Length > 0 ? s + "   |   " : "") + FarMap.Live();
             if (MarkerColors.Installed) s = (s.Length > 0 ? s + "   |   " : "") + MarkerColors.Live();
+            if (SurvivalToolCacheFix.Installed) s = (s.Length > 0 ? s + "   |   " : "") + SurvivalToolCacheFix.Live();
             return s;
         }
 
@@ -45,6 +46,7 @@ namespace HSKPerformance
             MarkerColors.Enabled = cfg.FixFarMap;   // the marker colours are part of the interactive map, no separate switch
             MarkerColors.BadgesEnabled = cfg.MarkerBadges;
             MarkerColors.CacheEnabled = cfg.FixCameraCache;
+            SurvivalToolCacheFix.Enabled = cfg.FixSurvivalToolCache && SurvivalToolCacheFix.Installed;
             FpsTpsCounter.Enabled = cfg.ShowFpsTps;
             MarkerColors.SetColors(cfg.MarkerColonist, cfg.MarkerPredator, cfg.MarkerGuest, cfg.MarkerPrisoner, cfg.MarkerSlave, cfg.MarkerDrone);
             MarkerColors.SetDronePrefixes(cfg.MarkerDronePrefixes);
@@ -69,6 +71,7 @@ namespace HSKPerformance
                 PawnEffectsFix.Apply(harmony, cfg);
                 FarMap.Apply(harmony, cfg);
                 MarkerColors.Apply(harmony, cfg);
+                SurvivalToolCacheFix.Apply(harmony, cfg);
                 if (cfg.FixMothballHediffs) MothballHediffFix.Apply(cfg);
                 else Status.Add("mothball hediff fix: off (settings / config.txt)");
                 FpsTpsCounter.Enabled = cfg.ShowFpsTps;

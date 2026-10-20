@@ -49,6 +49,7 @@ namespace HSKPerformance
         public bool FixCameraCache = true;       // per-frame caches for Camera+'s CurrentZoom and GetMarkerColors (checkbox in settings)
         public bool ShowFpsTps = false;          // FPS/TPS counter in the top-right corner (off by default; only shows when Dubs Performance Analyzer is absent)
         public bool LogVerbose = false;          // informational console messages; off = quiet console (errors are always logged)
+        public bool FixSurvivalToolCache = false; // cache Survival Tools Lite's best-tool-per-stat lookup (off by default)
         // Camera+ marker outlines: colonists green, wild predators red (only where the player has no Camera+ rule for the pawn).
         // Enabled together with the far map (fix_far_map) - there is no separate switch.
         public string MarkerColonist = "33E055", MarkerPredator = "E63030";   // RRGGBB
@@ -118,6 +119,7 @@ namespace HSKPerformance
                     "fix_camera_cache=" + B(FixCameraCache) + "\n" +
                     "show_fps_tps=" + B(ShowFpsTps) + "\n" +
                     "log_verbose=" + B(LogVerbose) + "\n" +
+                    "fix_survival_tool_cache=" + B(FixSurvivalToolCache) + "\n" +
                     "marker_colonist=" + MarkerColonist + "\n" +
                     "marker_predator=" + MarkerPredator + "\n" +
                     "marker_guest=" + MarkerGuest + "\n" +
@@ -184,6 +186,7 @@ namespace HSKPerformance
                         "fix_camera_cache=true\n" +
                         "show_fps_tps=false\n" +
                         "log_verbose=false\n" +
+                        "fix_survival_tool_cache=false\n" +
                         "marker_colonist=33E055\n" +
                         "marker_predator=E63030\n" +
                         "marker_guest=\n" +
@@ -246,6 +249,7 @@ namespace HSKPerformance
                         case "fix_camera_cache": if (bool.TryParse(v, out b)) c.FixCameraCache = b; break;
                         case "show_fps_tps": if (bool.TryParse(v, out b)) c.ShowFpsTps = b; break;
                         case "log_verbose": if (bool.TryParse(v, out b)) c.LogVerbose = b; break;
+                        case "fix_survival_tool_cache": if (bool.TryParse(v, out b)) c.FixSurvivalToolCache = b; break;
                         case "marker_colonist": c.MarkerColonist = v; break;
                         case "marker_predator": c.MarkerPredator = v; break;
                         case "marker_guest": c.MarkerGuest = v; break;

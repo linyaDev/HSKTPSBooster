@@ -12,7 +12,7 @@ namespace HSKPerformance
     {
         ProbeConfig cfg;
         Vector2 scroll;
-        bool sRot, sMap, sEff, sMoth, sBadge, sCam, sFps, sLog; // what was last applied, to notice a click
+        bool sRot, sMap, sEff, sMoth, sBadge, sCam, sFps, sLog, sTool; // what was last applied, to notice a click
 
         public HSKPerformanceMod(ModContentPack content) : base(content) { }
 
@@ -22,7 +22,7 @@ namespace HSKPerformance
         {
             if (cfg != null) return;
             cfg = ProbeConfig.Load();
-            sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose;
+            sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose; sTool = cfg.FixSurvivalToolCache;
         }
 
         public override void DoSettingsWindowContents(Rect inRect)
@@ -41,6 +41,8 @@ namespace HSKPerformance
                 "Со второй скорости и выше не создаются следы пешек, пар от дыхания, рябь на воде и дым разбитых капсул и кораблей. Дым печей, огонь костров и пожары остаются. На игру не влияет, только на вид.");
             l.CheckboxLabeled("Заморозка мировых пешек с хроническими болезнями", ref cfg.FixMothballHediffs,
                 "Такие пешки перестают тикать каждый тик. Побочный эффект: эти болезни больше не убивают мировых пешек.");
+            l.CheckboxLabeled("Кэш инструментов выживания (Survival Tools Lite)", ref cfg.FixSurvivalToolCache,
+                "Survival Tools Lite пересчитывает лучший инструмент под стат при каждом обращении к нему (перебор инвентаря и экипировки). Кэш хранит результат на ~1 секунду. Результат тот же, только без пересчёта. Ничего не делает, если Survival Tools Lite не загружен. Экспериментально, по умолчанию выключено.");
             l.CheckboxLabeled("Интерактивная карта", ref cfg.FixFarMap,
                 "При большом отдалении вместо обычной карты рисуются стены, горы и глубокая вода на одном фоне. Пешки, животные и враги остаются. Чертежи и недостроенные каркасы показаны ярко-синими клетками (терраформинг и полы не показываются). Свежие трупы животных вне складов - розовые точки, летящие пули и снаряды - жёлтые, торнадо, смерчи и ледяные вихри показаны целиком. Дождь, снег и молнии не рисуются, пока карта активна (сама погода продолжает идти)."
                 + "\n\nМаркеры Camera+ закрашены по статусу: колонисты зелёные (выбранные, лежачие и в срыве остаются как в Camera+), гости светло-голубые, пленные оранжевые, рабы жёлтые, хищники не из вашей колонии красные. Под маркером выбранной пешки рисуется её имя, слева сверху от маркера колониста - его первый значок из мода Pawn Badge (если тот включён). При наведении курсора маркер не заменяется реальной пешкой - показывается только имя. Сильно снижает нагрузку при отдалении.");
@@ -65,9 +67,9 @@ namespace HSKPerformance
             l.CheckboxLabeled("Подробный лог в консоль", ref cfg.LogVerbose,
                 "По умолчанию мод пишет в консоль только ошибки. Включите, если нужны информационные сообщения (статус фиксов при запуске, ход записи профиля).");
 
-            if (cfg.FixRotStorage != sRot || cfg.FixFarMap != sMap || cfg.FixPawnEffects != sEff || cfg.FixMothballHediffs != sMoth || cfg.MarkerBadges != sBadge || cfg.FixCameraCache != sCam || cfg.ShowFpsTps != sFps || cfg.LogVerbose != sLog)
+            if (cfg.FixRotStorage != sRot || cfg.FixFarMap != sMap || cfg.FixPawnEffects != sEff || cfg.FixMothballHediffs != sMoth || cfg.MarkerBadges != sBadge || cfg.FixCameraCache != sCam || cfg.ShowFpsTps != sFps || cfg.LogVerbose != sLog || cfg.FixSurvivalToolCache != sTool)
             {
-                sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose;
+                sRot = cfg.FixRotStorage; sMap = cfg.FixFarMap; sEff = cfg.FixPawnEffects; sMoth = cfg.FixMothballHediffs; sBadge = cfg.MarkerBadges; sCam = cfg.FixCameraCache; sFps = cfg.ShowFpsTps; sLog = cfg.LogVerbose; sTool = cfg.FixSurvivalToolCache;
                 cfg.Save();
                 PerfFixes.Reload(cfg);
             }
