@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <HSKTPS.Fixes.Header>Fixes (applied instantly, no restart needed)</HSKTPS.Fixes.Header>
+  <HSKTPS.Experimental.Header>I want more TPS and I'm willing to take a little risk. AT ANY COST — BUT FOR FREE</HSKTPS.Experimental.Header>
+  <HSKTPS.Recording.Note>Performance capture: Ctrl+F9. Other settings (capture length, map colours, speed thresholds) are in config.txt: {0}</HSKTPS.Recording.Note>
+
+  <HSKTPS.RotStorage.Label>Fast storage lookup for rotting items</HSKTPS.RotStorage.Label>
+  <HSKTPS.RotStorage.Desc>HSK Core searched for the storage of every rotting item by scanning all stockpiles. Now it is a single cell lookup.</HSKTPS.RotStorage.Desc>
+
+  <HSKTPS.PawnEffects.Label>No cosmetic effects at high speed</HSKTPS.PawnEffects.Label>
+  <HSKTPS.PawnEffects.Desc>At the second game speed and above, footprints, breath vapour, water ripples and the smoke of crashed pods and ships are not created. Furnace smoke, campfires and real fires stay. No effect on gameplay, only on looks.</HSKTPS.PawnEffects.Desc>
+
+  <HSKTPS.Mothball.Label>Mothball world pawns with chronic diseases</HSKTPS.Mothball.Label>
+  <HSKTPS.Mothball.Desc>Affects only a specific set of conditions — chronic diseases from the Cybranian Diseases+ mod (DimonSever000_*) and vanilla malnutrition and drug needs; the list is editable in config.txt (mothball_hediffs). Such pawns stop ticking every tick (only a rare age tick remains). Side effect: while a pawn is mothballed its health is paused — diseases do not progress, do not kill and do not heal; everything resumes when it arrives on a map. Mothballing is not instant (a pass every ~6 in-game hours) and does not touch caravans, pawns in transport pods or pawns with other active conditions — those tick and die as usual.</HSKTPS.Mothball.Desc>
+
+  <HSKTPS.FarMap.Label>Interactive map</HSKTPS.FarMap.Label>
+  <HSKTPS.FarMap.Desc>When zoomed far out, instead of the normal map it draws walls, rock and deep water on a single background. Pawns, animals and enemies stay. Blueprints and unfinished frames are shown as bright blue cells (terraforming and floors are not shown). Fresh animal corpses outside storage are pink dots, projectiles in flight are yellow, tornadoes, whirlwinds and ice vortices are drawn in full. Rain, snow and lightning are not drawn while the map is active (the weather itself keeps going).\n\nCamera+ markers are filled by status: colonists green (selected, downed and in a mental break keep Camera+'s own colours), guests light blue, prisoners orange, slaves yellow, predators not of your colony red. The name of a selected pawn is drawn under its marker, and the first Pawn Badge icon of a colonist is drawn at the top left of its marker (if that mod is loaded). Hovering a marker no longer replaces it with the real pawn — only the name is shown. Greatly reduces load when zoomed out.</HSKTPS.FarMap.Desc>
+  <HSKTPS.FarMap.Slider>Activate when a cell is smaller than {0} px (now {1} px). A higher number activates it at a closer zoom.</HSKTPS.FarMap.Slider>
+
+  <HSKTPS.Badges.Label>Pawn Badge icons on colonist markers</HSKTPS.Badges.Label>
+  <HSKTPS.Badges.Desc>The colonist's first Pawn Badge icon is drawn at the top left of its Camera+ marker. Does nothing if the Pawn Badge mod is not loaded.</HSKTPS.Badges.Desc>
+
+  <HSKTPS.CameraCache.Label>Camera+ cache (zoom and marker colours)</HSKTPS.CameraCache.Label>
+  <HSKTPS.CameraCache.Desc>Camera+ recomputes the camera zoom and marker colours thousands of times per frame. With the cache this is computed once per frame and the rest is read from memory (~26 ms/s of CPU). Only worth turning off to compare captures.</HSKTPS.CameraCache.Desc>
+
+  <HSKTPS.FpsTps.Label>FPS / TPS counter in the corner</HSKTPS.FpsTps.Label>
+  <HSKTPS.FpsTps.Desc>A small frames and ticks counter in the top-right corner (like Dubs Performance Analyzer). Automatically hidden when Dubs Performance Analyzer is enabled.</HSKTPS.FpsTps.Desc>
+  <HSKTPS.FpsTps.HiddenSuffix>Currently hidden: Dubs Performance Analyzer is active.</HSKTPS.FpsTps.HiddenSuffix>
+
+  <HSKTPS.LogVerbose.Label>Verbose console log</HSKTPS.LogVerbose.Label>
+  <HSKTPS.LogVerbose.Desc>By default the mod writes only errors to the console. Enable if you want the informational messages (fix status at startup, capture progress).</HSKTPS.LogVerbose.Desc>
+
+  <HSKTPS.SurvivalTool.Label>Survival tool cache (Survival Tools Lite)</HSKTPS.SurvivalTool.Label>
+  <HSKTPS.SurvivalTool.Desc>Survival Tools Lite recomputes the best tool for a stat on every lookup (scanning inventory and equipment). The cache keeps the result for ~1 second. The result is the same, just without the recompute; the first calls are checked against the original, and the cache disables itself on a mismatch. Does nothing if Survival Tools Lite is not loaded.</HSKTPS.SurvivalTool.Desc>
+
+  <HSKTPS.StatCache.Label>Expensive stat cache (+13% TPS measured — but read the description)</HSKTPS.StatCache.Label>
+  <HSKTPS.StatCache.Desc>The most expensive pawn stats are recomputed from scratch on every lookup: comfortable temperature (walks all apparel), psychic sensitivity, global work speed, CE carry capacity and others — tens of ms/s together. The game can cache them, but trusts the cache for at most 1 tick. This fix raises that trust to ~2 seconds: a change of apparel, bionics or genes shows in the stat with that delay, otherwise the values are the same. The stat list is editable in config.txt (stat_cache_stats); move speed and market value are deliberately excluded.</HSKTPS.StatCache.Desc>
+
+</LanguageData>

@@ -30,6 +30,7 @@ namespace HSKPerformance
             if (FarMap.Installed) s = (s.Length > 0 ? s + "   |   " : "") + FarMap.Live();
             if (MarkerColors.Installed) s = (s.Length > 0 ? s + "   |   " : "") + MarkerColors.Live();
             if (SurvivalToolCacheFix.Installed) s = (s.Length > 0 ? s + "   |   " : "") + SurvivalToolCacheFix.Live();
+            if (StatCacheFix.Installed) s = (s.Length > 0 ? s + "   |   " : "") + StatCacheFix.Live();
             return s;
         }
 
@@ -47,6 +48,7 @@ namespace HSKPerformance
             MarkerColors.BadgesEnabled = cfg.MarkerBadges;
             MarkerColors.CacheEnabled = cfg.FixCameraCache;
             SurvivalToolCacheFix.Enabled = cfg.FixSurvivalToolCache && SurvivalToolCacheFix.Installed;
+            StatCacheFix.Enabled = cfg.FixStatCache && StatCacheFix.Installed;
             FpsTpsCounter.Enabled = cfg.ShowFpsTps;
             MarkerColors.SetColors(cfg.MarkerColonist, cfg.MarkerPredator, cfg.MarkerGuest, cfg.MarkerPrisoner, cfg.MarkerSlave, cfg.MarkerDrone);
             MarkerColors.SetDronePrefixes(cfg.MarkerDronePrefixes);
@@ -72,6 +74,7 @@ namespace HSKPerformance
                 FarMap.Apply(harmony, cfg);
                 MarkerColors.Apply(harmony, cfg);
                 SurvivalToolCacheFix.Apply(harmony, cfg);
+                StatCacheFix.Apply(harmony, cfg);
                 if (cfg.FixMothballHediffs) MothballHediffFix.Apply(cfg);
                 else Status.Add("mothball hediff fix: off (settings / config.txt)");
                 FpsTpsCounter.Enabled = cfg.ShowFpsTps;
@@ -161,9 +164,12 @@ namespace HSKPerformance
     /// it unless it is permanent or HediffDef.AlwaysAllowMothball is true. Chronic diseases, malnutrition (world pawns
     /// never eat, so it never heals) and drug needs therefore keep pawns in the per-tick list for hundreds of days.
     ///
-    /// Mothballing does not advance hediffs: Pawn.TickMothballed only ages the pawn and updates its records. So marking these
-    /// defs as "always allow mothball" just freezes the disease in place while the pawn is a world pawn. The only side effect is
-    /// that such a disease stops killing world pawns. The same trick is used by the MothballFix.xml patch of Missile Girl.
+    /// Mothballing does not advance hediffs: Pawn.TickMothballed only ages the pawn (birthdays included) and updates its
+    /// records — HealthTick never runs for a mothballed pawn. So marking these defs as "always allow mothball" freezes the
+    /// disease in place: while the pawn stays mothballed it cannot progress, kill or heal; it resumes when the pawn is spawned.
+    /// Pawns that are not mothballed are unaffected: the freshly sick keep ticking until the next mothball pass (every 15000
+    /// ticks), and caravan members, transport-pod passengers and pawns with other blocking hediffs are never mothballed.
+    /// The same trick is used by the MothballFix.xml patch of Missile Girl.
     /// </summary>
     static class MothballHediffFix
     {

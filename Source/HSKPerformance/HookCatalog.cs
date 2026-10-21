@@ -261,7 +261,7 @@ namespace HSKPerformance
             Add("Tick", "WorkGiver", false, "RimWorld.WorkGiver", "ShouldSkip", "HasJobOnThing", "JobOnThing", "HasJobOnCell", "JobOnCell");
             Add("Tick", "ThoughtWorker", false, "RimWorld.ThoughtWorker", "CurrentStateInternal", "CurrentSocialStateInternal");
             Add("Tick", "IncidentWorker", false, "RimWorld.IncidentWorker", "CanFireNowSub", "TryExecuteWorker");
-            Add("Tick", "StatWorker", false, "RimWorld.StatWorker", "GetValueUnfinalized", "FinalizeValue");
+            Add("Tick", "StatWorker", true, "RimWorld.StatWorker", "GetValueUnfinalized", "FinalizeValue");  // track=def: break the cost down per StatDef
             Add("Tick", "StatPart", false, "RimWorld.StatPart", "TransformValue");
             Add("Tick", "HediffGiver", false, "Verse.HediffGiver", "OnIntervalPassed");
             Add("Tick", "Room stat workers", false, "Verse.RoomStatWorker|RimWorld.RoomStatWorker", "GetScore");

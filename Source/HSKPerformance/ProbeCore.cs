@@ -125,6 +125,21 @@ namespace HSKPerformance
             if (instance != null) TrackDef(instance, excl);
         }
 
+        static System.Reflection.FieldInfo statWorkerStatField;
+        static bool statWorkerStatResolved;
+        static Def StatWorkerStat(StatWorker sw)
+        {
+            if (!statWorkerStatResolved)
+            {
+                statWorkerStatResolved = true;
+                try { statWorkerStatField = typeof(StatWorker).GetField("stat", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public); }
+                catch { statWorkerStatField = null; }
+            }
+            if (statWorkerStatField == null) return null;
+            try { return statWorkerStatField.GetValue(sw) as Def; }
+            catch { return null; }
+        }
+
         static void TrackDef(object inst, long excl)
         {
             Def def = null;
@@ -148,6 +163,13 @@ namespace HSKPerformance
                             // execution shows up per JobDef in the definitions table (kind JobDef)
                             var jd = inst as Verse.AI.JobDriver;
                             if (jd != null && jd.job != null) def = jd.job.def;
+                            else
+                            {
+                                // StatWorker.GetValueUnfinalized/FinalizeValue -> the StatDef being computed, so the big StatWorker
+                                // cost is broken down per stat (kind StatDef) in the definitions table
+                                var sw = inst as StatWorker;
+                                if (sw != null) def = StatWorkerStat(sw);
+                            }
                         }
                     }
                 }

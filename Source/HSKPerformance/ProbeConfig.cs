@@ -51,6 +51,11 @@ namespace HSKPerformance
         public bool LogVerbose = false;          // informational console messages; off = quiet console (errors are always logged)
         public bool FixSurvivalToolCache = false; // cache Survival Tools Lite's best-tool-per-stat lookup (off by default)
         public int FixSurvivalToolVerifyCalls = 1000; // compare cache vs original for the first N serve-eligible calls (0 = trust blindly)
+        public bool FixStatCache = false;         // serve the vanilla stat cache for longer than 1 tick for the stats listed below (off by default)
+        public int FixStatCacheTicks = 120;       // accepted staleness in ticks for the stat cache
+        public string StatCacheStats =            // stats served from the cache; deliberately without MoveSpeed (async pathfinding) and MarketValue (wealth/trade)
+            "ComfyTemperatureMin,ComfyTemperatureMax,MentalBreakThreshold,MaxNutrition,PsychicSensitivity,PsychicSensitivityOffset,MeditationFocusGain,WorkSpeedGlobal,ResearchSpeed,SmeltingSpeed,WorkSpeedGlobalOffsetMech,CarryBulk,CarryWeight,"
+            + "DeepDrillingSpeed,GeneralLaborSpeed,WorkTableWorkSpeedFactor,CookSpeed,PlantWorkSpeed,ConstructionSpeed,MiningYield,VacuumResistance,EnergyShieldRechargeRate";
         // Camera+ marker outlines: colonists green, wild predators red (only where the player has no Camera+ rule for the pawn).
         // Enabled together with the far map (fix_far_map) - there is no separate switch.
         public string MarkerColonist = "33E055", MarkerPredator = "E63030";   // RRGGBB
@@ -122,6 +127,9 @@ namespace HSKPerformance
                     "log_verbose=" + B(LogVerbose) + "\n" +
                     "fix_survival_tool_cache=" + B(FixSurvivalToolCache) + "\n" +
                     "fix_survival_tool_verify_calls=" + FixSurvivalToolVerifyCalls.ToString(CultureInfo.InvariantCulture) + "\n" +
+                    "fix_stat_cache=" + B(FixStatCache) + "\n" +
+                    "fix_stat_cache_ticks=" + FixStatCacheTicks.ToString(CultureInfo.InvariantCulture) + "\n" +
+                    "stat_cache_stats=" + StatCacheStats + "\n" +
                     "marker_colonist=" + MarkerColonist + "\n" +
                     "marker_predator=" + MarkerPredator + "\n" +
                     "marker_guest=" + MarkerGuest + "\n" +
@@ -254,6 +262,9 @@ namespace HSKPerformance
                         case "log_verbose": if (bool.TryParse(v, out b)) c.LogVerbose = b; break;
                         case "fix_survival_tool_cache": if (bool.TryParse(v, out b)) c.FixSurvivalToolCache = b; break;
                         case "fix_survival_tool_verify_calls": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n >= 0) c.FixSurvivalToolVerifyCalls = n; break;
+                        case "fix_stat_cache": case "fix_comfy_temp_cache": if (bool.TryParse(v, out b)) c.FixStatCache = b; break;
+                        case "fix_stat_cache_ticks": case "fix_comfy_temp_cache_ticks": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n >= 2) c.FixStatCacheTicks = n; break;
+                        case "stat_cache_stats": if (v.Length > 0) c.StatCacheStats = v; break;
                         case "marker_colonist": c.MarkerColonist = v; break;
                         case "marker_predator": c.MarkerPredator = v; break;
                         case "marker_guest": c.MarkerGuest = v; break;
