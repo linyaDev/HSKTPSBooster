@@ -37,6 +37,7 @@ namespace HSKPerformance
         /// <summary>Applies the fix switches of a config right away (called by the mod settings window).</summary>
         public static void Reload(ProbeConfig cfg)
         {
+            MultiplayerPolicy.Apply(cfg);
             PerfLog.Verbose = cfg.LogVerbose;
             RotStorageFix.Enabled = cfg.FixRotStorage;
             PawnEffectsFix.Enabled = cfg.FixPawnEffects;
@@ -65,6 +66,7 @@ namespace HSKPerformance
             try
             {
                 var cfg = ProbeConfig.Load();
+                MultiplayerPolicy.Apply(cfg);
                 PerfLog.Verbose = cfg.LogVerbose;
                 var harmony = new Harmony(HarmonyId);
                 // Patches are installed whatever the config says and only gated by a live flag, so the settings window can switch every fix

@@ -28,16 +28,22 @@ namespace HSKPerformance
         public override void DoSettingsWindowContents(Rect inRect)
         {
             Ensure();
-            var view = new Rect(0f, 0f, inRect.width - 20f, 560f);
+            MultiplayerPolicy.Apply(cfg);
+            var view = new Rect(0f, 0f, inRect.width - 20f, MultiplayerPolicy.Active ? 650f : 560f);
             Widgets.BeginScrollView(inRect, ref scroll, view);
             var l = new Listing_Standard();
             l.Begin(view);
 
             l.Label("HSKTPS.Fixes.Header".Translate());
             l.Gap(4f);
+            bool wasEnabled = GUI.enabled;
+            if (MultiplayerPolicy.Active)
+                l.Label("HSKTPS.Multiplayer.Restricted".Translate());
+            GUI.enabled = wasEnabled && !MultiplayerPolicy.Active;
             l.CheckboxLabeled("HSKTPS.RotStorage.Label".Translate(), ref cfg.FixRotStorage, "HSKTPS.RotStorage.Desc".Translate());
             l.CheckboxLabeled("HSKTPS.PawnEffects.Label".Translate(), ref cfg.FixPawnEffects, "HSKTPS.PawnEffects.Desc".Translate());
             l.CheckboxLabeled("HSKTPS.Mothball.Label".Translate(), ref cfg.FixMothballHediffs, "HSKTPS.Mothball.Desc".Translate());
+            GUI.enabled = wasEnabled;
             l.CheckboxLabeled("HSKTPS.FarMap.Label".Translate(), ref cfg.FixFarMap, "HSKTPS.FarMap.Desc".Translate());
             if (cfg.FixFarMap)
             {
@@ -47,12 +53,15 @@ namespace HSKPerformance
                 FarMap.ThresholdPx = cfg.FarMapPx;
                 l.Indent(20f);
                 l.ColumnWidth -= 20f;
+                GUI.enabled = wasEnabled && !MultiplayerPolicy.Active;
                 l.CheckboxLabeled("HSKTPS.Badges.Label".Translate(), ref cfg.MarkerBadges, "HSKTPS.Badges.Desc".Translate());
                 l.CheckboxLabeled("HSKTPS.CameraCache.Label".Translate(), ref cfg.FixCameraCache, "HSKTPS.CameraCache.Desc".Translate());
+                GUI.enabled = wasEnabled;
                 l.ColumnWidth += 20f;
                 l.Outdent(20f);
             }
 
+            GUI.enabled = wasEnabled && !MultiplayerPolicy.Active;
             string fpsTip = "HSKTPS.FpsTps.Desc".Translate();
             if (!FpsTpsCounter.Available) fpsTip += " " + "HSKTPS.FpsTps.HiddenSuffix".Translate();
             l.CheckboxLabeled("HSKTPS.FpsTps.Label".Translate(), ref cfg.ShowFpsTps, fpsTip);
@@ -63,6 +72,7 @@ namespace HSKPerformance
             l.Gap(4f);
             l.CheckboxLabeled("HSKTPS.SurvivalTool.Label".Translate(), ref cfg.FixSurvivalToolCache, "HSKTPS.SurvivalTool.Desc".Translate());
             l.CheckboxLabeled("HSKTPS.StatCache.Label".Translate(), ref cfg.FixStatCache, "HSKTPS.StatCache.Desc".Translate());
+            GUI.enabled = wasEnabled;
 
             if (cfg.FixRotStorage != sRot || cfg.FixFarMap != sMap || cfg.FixPawnEffects != sEff || cfg.FixMothballHediffs != sMoth || cfg.MarkerBadges != sBadge || cfg.FixCameraCache != sCam || cfg.ShowFpsTps != sFps || cfg.LogVerbose != sLog || cfg.FixSurvivalToolCache != sTool || cfg.FixStatCache != sComfy)
             {

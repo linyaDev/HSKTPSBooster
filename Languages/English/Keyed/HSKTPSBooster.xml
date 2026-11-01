@@ -37,4 +37,5 @@
   <HSKTPS.StatCache.Label>Expensive stat cache (+13% TPS measured — but read the description)</HSKTPS.StatCache.Label>
   <HSKTPS.StatCache.Desc>The most expensive pawn stats are recomputed from scratch on every lookup: comfortable temperature (walks all apparel), psychic sensitivity, global work speed, CE carry capacity and others — tens of ms/s together. The game can cache them, but trusts the cache for at most 1 tick. This fix raises that trust to ~2 seconds: a change of apparel, bionics or genes shows in the stat with that delay, otherwise the values are the same. The stat list is editable in config.txt (stat_cache_stats); move speed and market value are deliberately excluded.</HSKTPS.StatCache.Desc>
 
+  <HSKTPS.Multiplayer.Restricted>While Multiplayer is active, only the interactive map is available. All other features are disabled and cannot be changed.</HSKTPS.Multiplayer.Restricted>
 </LanguageData>

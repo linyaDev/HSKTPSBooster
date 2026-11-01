@@ -29,7 +29,7 @@ namespace HSKPerformance
         public int WorldPawnRows = 300;        // rows in world_pawns.md (the CSV always has all of them)
         // Footprints, breath vapour, water ripples and the smoke of wrecks (HSK Core) are cosmetic flecks that the game ticks every tick. Skipped at game speed >= this (3 = Fast, the second speed).
         // Far map: when a cell is smaller than far_map_px on screen, draw walls, rock and a background colour instead of the map, and only pawns on top.
-        public bool FixFarMap = true;
+        public bool FixFarMap = false;
         public float FarMapPx = 15f;
         public string FarMapWall = "6E7680", FarMapRock = "3A302A", FarMapBackground = "121614";   // RRGGBB
         public string FarMapWater = "26394A", FarMapDoor = "434B53", FarMapBuilding = "2D343A", FarMapStorage = "3A3348", FarMapFire = "B5400F";
@@ -174,7 +174,7 @@ namespace HSKPerformance
                         "fix_rot_storage=true\n" +
                         "fix_rot_verify_calls=1000\n" +
                         "world_pawn_rows=300\n" +
-                        "fix_far_map=true\n" +
+                        "fix_far_map=false\n" +
                         "far_map_px=15\n" +
                         "far_map_wall=6E7680\n" +
                         "far_map_rock=3A302A\n" +
@@ -209,6 +209,7 @@ namespace HSKPerformance
                         "pawn_effects_min_speed=3\n" +
                         "fix_mothball_hediffs=true\n" +
                         "mothball_hediffs=DimonSever000_*,Malnutrition,GeneticDrugNeed,HemogenCraving\n");
+                    MultiplayerPolicy.Apply(c);
                     return c;
                 }
                 foreach (var raw in File.ReadAllLines(FilePath))
@@ -288,6 +289,7 @@ namespace HSKPerformance
             {
                 Log.Warning("[HSK TPS Booster] config problem, using defaults: " + e.Message);
             }
+            MultiplayerPolicy.Apply(c);
             return c;
         }
     }
