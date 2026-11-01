@@ -11,15 +11,16 @@ namespace HSKPerformance
         internal static void Apply(ProbeConfig cfg)
         {
             if (!Active) return;
-            cfg.FixRotStorage = false;
-            cfg.FixPawnEffects = false;
-            cfg.FixMothballHediffs = false;
-            cfg.MarkerBadges = false;
-            cfg.FixCameraCache = false;
-            cfg.ShowFpsTps = false;
-            cfg.LogVerbose = false;
-            cfg.FixSurvivalToolCache = false;
-            cfg.FixStatCache = false;
+            var defaults = new ProbeConfig();
+            cfg.FixRotStorage = defaults.FixRotStorage;
+            cfg.FixPawnEffects = defaults.FixPawnEffects;
+            cfg.FixMothballHediffs = defaults.FixMothballHediffs;
+            cfg.MarkerBadges = defaults.MarkerBadges;
+            cfg.FixCameraCache = defaults.FixCameraCache;
+            cfg.ShowFpsTps = defaults.ShowFpsTps;
+            cfg.LogVerbose = defaults.LogVerbose;
+            cfg.FixSurvivalToolCache = defaults.FixSurvivalToolCache;
+            cfg.FixStatCache = defaults.FixStatCache;
         }
     }
 }
