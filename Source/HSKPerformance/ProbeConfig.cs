@@ -30,6 +30,9 @@ namespace HSKPerformance
         // Footprints, breath vapour, water ripples and the smoke of wrecks (HSK Core) are cosmetic flecks that the game ticks every tick. Skipped at game speed >= this (3 = Fast, the second speed).
         // Far map: when a cell is smaller than far_map_px on screen, draw walls, rock and a background colour instead of the map, and only pawns on top.
         public bool FixFarMap = false;
+        // With Multiplayer active the map stays off until the player turns it on there; older
+        // versions defaulted fix_far_map to true, so a true from the file is not taken as a choice.
+        public bool FarMapChosenInMultiplayer = false;
         public float FarMapPx = 15f;
         public string FarMapWall = "6E7680", FarMapRock = "3A302A", FarMapBackground = "121614";   // RRGGBB
         public string FarMapWater = "26394A", FarMapDoor = "434B53", FarMapBuilding = "2D343A", FarMapStorage = "3A3348", FarMapFire = "B5400F";
@@ -104,6 +107,7 @@ namespace HSKPerformance
                     "fix_rot_verify_calls=" + FixRotVerifyCalls.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "world_pawn_rows=" + WorldPawnRows.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "fix_far_map=" + B(FixFarMap) + "\n" +
+                    "far_map_multiplayer_choice=" + B(FarMapChosenInMultiplayer) + "\n" +
                     "far_map_px=" + FarMapPx.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "far_map_wall=" + FarMapWall + "\n" +
                     "far_map_rock=" + FarMapRock + "\n" +
@@ -175,6 +179,7 @@ namespace HSKPerformance
                         "fix_rot_verify_calls=1000\n" +
                         "world_pawn_rows=300\n" +
                         "fix_far_map=false\n" +
+                        "far_map_multiplayer_choice=false\n" +
                         "far_map_px=15\n" +
                         "far_map_wall=6E7680\n" +
                         "far_map_rock=3A302A\n" +
@@ -240,6 +245,7 @@ namespace HSKPerformance
                         case "fix_rot_verify_calls": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n >= 0) c.FixRotVerifyCalls = n; break;
                         case "world_pawn_rows": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n > 0) c.WorldPawnRows = n; break;
                         case "fix_far_map": if (bool.TryParse(v, out b)) c.FixFarMap = b; break;
+                        case "far_map_multiplayer_choice": if (bool.TryParse(v, out b)) c.FarMapChosenInMultiplayer = b; break;
                         case "far_map_px": { float fpx; if (float.TryParse(v, NumberStyles.Float, CultureInfo.InvariantCulture, out fpx) && fpx > 0f) c.FarMapPx = fpx; break; }
                         case "far_map_wall": c.FarMapWall = v; break;
                         case "far_map_rock": c.FarMapRock = v; break;

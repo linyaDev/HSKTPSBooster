@@ -21,6 +21,8 @@ namespace HSKPerformance
             cfg.LogVerbose = defaults.LogVerbose;
             cfg.FixSurvivalToolCache = defaults.FixSurvivalToolCache;
             cfg.FixStatCache = defaults.FixStatCache;
+            // the interactive map is off by default in Multiplayer, until the player switches it there
+            if (!cfg.FarMapChosenInMultiplayer) cfg.FixFarMap = false;
         }
     }
 }

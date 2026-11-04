@@ -44,7 +44,9 @@ namespace HSKPerformance
             l.CheckboxLabeled("HSKTPS.PawnEffects.Label".Translate(), ref cfg.FixPawnEffects, "HSKTPS.PawnEffects.Desc".Translate());
             l.CheckboxLabeled("HSKTPS.Mothball.Label".Translate(), ref cfg.FixMothballHediffs, "HSKTPS.Mothball.Desc".Translate());
             GUI.enabled = wasEnabled;
+            bool farMapBefore = cfg.FixFarMap;
             l.CheckboxLabeled("HSKTPS.FarMap.Label".Translate(), ref cfg.FixFarMap, "HSKTPS.FarMap.Desc".Translate());
+            if (cfg.FixFarMap != farMapBefore && MultiplayerPolicy.Active) cfg.FarMapChosenInMultiplayer = true;
             if (cfg.FixFarMap)
             {
                 l.Gap(2f);
