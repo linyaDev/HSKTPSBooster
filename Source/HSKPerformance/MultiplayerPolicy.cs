@@ -21,6 +21,8 @@ namespace HSKPerformance
             cfg.LogVerbose = defaults.LogVerbose;
             cfg.FixSurvivalToolCache = defaults.FixSurvivalToolCache;
             cfg.FixStatCache = defaults.FixStatCache;
+            // which hediffs let world pawns be mothballed decides which of them tick, so every side needs the same list
+            cfg.MothballHediffs = defaults.MothballHediffs;
             // the interactive map is off by default in Multiplayer, until the player switches it there
             if (!cfg.FarMapChosenInMultiplayer) cfg.FixFarMap = false;
         }
