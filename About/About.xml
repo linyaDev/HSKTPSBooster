@@ -8,26 +8,20 @@
 	</supportedVersions>
 	<packageId>linya.hsktpsbooster</packageId>
 	<description>
-[English]
+[eng]
 Makes HSK run faster.
-But let's play until you get to the point where you notice lag, then install Performance Optimizer and Missile Girl, and if you still have lag, then use my mod. If you still have lag, post in the thread and attach a save.
-		
-- Higher TPS, especially in big colonies
-- Several bug fixes
-- A new interactive map mode
 
++ A new interactive map mode
 Everything can be switched on and off in the mod settings.
 
-[Russian]
+[rus]
 Ускоряет работу HSK.
-Но давайе вы вначале доиграте до лагов, потом поставите Performance Optimizer и Missile Girl и если все равно есть лаги , то уже мой мод. Если лаги все еще есть , пишите в тему  - прикрепрляйте сейв.
 
-		
-- Выше TPS, особенно в больших колониях
-- Несколько исправлений ошибок
-- Новый интерактивный режим карты
-
++ Новый интерактивный режим карты
 Всё включается и выключается в настройках мода.
+
+Хочу посмотреть какой мод лагает
+Ставите 3тью скорость и жмите ctrl+f9. Полученный архив присылаете в тему или смотрите сами.
 	</description>
 	<modDependencies>
 		<li>

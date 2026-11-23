@@ -2,10 +2,7 @@
 
 Makes HSK run faster.
 
-- Higher TPS, especially in big colonies
-- Several bug fixes
-- A new interactive map mode
-
++ A new interactive map mode
 Everything can be switched on and off in the mod settings.
 
 Performance capture: Ctrl+F9. When it is saved, a window with charts opens in game (Ctrl+F11 opens it any time):
@@ -23,11 +20,11 @@ Requires RimWorld 1.6, Hardcore SK, Harmony, Performance Optimizer and Missile G
 
 Ускоряет работу HSK.
 
-- Выше TPS, особенно в больших колониях
-- Несколько исправлений ошибок
-- Новый интерактивный режим карты
-
++ Новый интерактивный режим карты
 Всё включается и выключается в настройках мода.
+
+Хочу посмотреть какой мод лагает
+Ставите 3тью скорость и жмите ctrl+f9. Полученный архив присылаете в тему или смотрите сами.
 
 Запись производительности: Ctrl+F9. Когда она сохранена, в игре открывается окно с графиками (Ctrl+F11 открывает его в любой момент):
 время кадров и тиков, нагрузка по модам, деревья методов и дефов с поиском. Старые записи выбираются из списка.
