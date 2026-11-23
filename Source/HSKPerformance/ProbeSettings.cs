@@ -29,7 +29,7 @@ namespace HSKPerformance
         {
             Ensure();
             MultiplayerPolicy.Apply(cfg);
-            var view = new Rect(0f, 0f, inRect.width - 20f, MultiplayerPolicy.Active ? 650f : 560f);
+            var view = new Rect(0f, 0f, inRect.width - 20f, MultiplayerPolicy.Active ? 720f : 630f);
             Widgets.BeginScrollView(inRect, ref scroll, view);
             var l = new Listing_Standard();
             l.Begin(view);
@@ -85,6 +85,10 @@ namespace HSKPerformance
 
             l.Gap(14f);
             l.Label("HSKTPS.Recording.Note".Translate(ProbeConfig.Dir));
+            bool autoOpen = cfg.OpenViewerAfterReport;
+            l.CheckboxLabeled("HSKTPS.Viewer.AutoOpen.Label".Translate(), ref cfg.OpenViewerAfterReport, "HSKTPS.Viewer.AutoOpen.Desc".Translate());
+            if (cfg.OpenViewerAfterReport != autoOpen) cfg.Save();
+            if (l.ButtonText("HSKTPS.Viewer.OpenButton".Translate())) ReportViewer.OpenLatest();
             l.End();
             Widgets.EndScrollView();
         }

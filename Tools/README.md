@@ -2,10 +2,13 @@
 
 Вспомогательные скрипты для профилировщика HSK TPS Booster (не часть мода, в игру не грузятся).
 
+Смотреть отчёт можно прямо в игре: окно открывается само после записи и по Ctrl+F11
+(`Source/HSKPerformance/Viewer/`). Скрипт ниже нужен, только если отчёт надо переслать файлом.
+
 ## report_tree.py
 
 Делает самодостаточную интерактивную HTML-страницу из дампа профилировщика
-(`report-<timestamp>-<light|full>/`, который пишется по Ctrl+F9).
+(`report-<timestamp>/`, который пишется по Ctrl+F9).
 
 Берёт `methods.csv`, строит раскрывающееся дерево **Категория → Мод → Метод** с
 полосами стоимости, поиском и сортировкой. Шапку (скорость игры, длительность,
@@ -14,7 +17,7 @@ FPS/TPS) подхватывает из `report.md`, если он лежит р�
 
 ```sh
 # по папке дампа (html ляжет внутрь как report-tree.html)
-python report_tree.py "…/HSKTPSBooster/report-20261012-154058-full"
+python report_tree.py "…/HSKTPSBooster/report-20261012-154058"
 
 # по конкретному CSV со своим путём вывода
 python report_tree.py "…/report-…/methods.csv" tree.html

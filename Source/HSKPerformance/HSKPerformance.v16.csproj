@@ -14,6 +14,8 @@
     <!-- Первый существующий путь выигрывает: машины с разными установками игры.
          Проверяем именно Managed: в стимовской копии теперь 1.7, где этой папки нет. -->
     <RimWorldPath Condition="'$(RimWorldPath)' == '' AND Exists('D:\RimWorld_HSK\RimWorldWin64_Data\Managed')">D:\RimWorld_HSK</RimWorldPath>
+    <!-- копия 1.6, сохранённая перед переходом HSK2 на 1.7 -->
+    <RimWorldPath Condition="'$(RimWorldPath)' == '' AND Exists('D:\RimWorld_HSK2\Backup-1.6-20261102-224049\RimWorldWin64_Data\Managed')">D:\RimWorld_HSK2\Backup-1.6-20261102-224049</RimWorldPath>
     <RimWorldPath Condition="'$(RimWorldPath)' == '' AND Exists('D:\SteamLibrary\steamapps\common\RimWorld\RimWorldWin64_Data\Managed')">D:\SteamLibrary\steamapps\common\RimWorld</RimWorldPath>
     <RimWorldPath Condition="'$(RimWorldPath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\RimWorld</RimWorldPath>
   </PropertyGroup>

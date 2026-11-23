@@ -3,7 +3,7 @@
 
   <HSKTPS.Fixes.Header>Fixes (applied instantly, no restart needed)</HSKTPS.Fixes.Header>
   <HSKTPS.Experimental.Header>I want more TPS and I'm willing to take a little risk. AT ANY COST — BUT FOR FREE</HSKTPS.Experimental.Header>
-  <HSKTPS.Recording.Note>Performance capture: Ctrl+F9. Other settings (capture length, map colours, speed thresholds) are in config.txt: {0}</HSKTPS.Recording.Note>
+  <HSKTPS.Recording.Note>Performance capture: Ctrl+F9, report viewer: Ctrl+F11. Other settings (capture length, map colours, speed thresholds) are in config.txt: {0}</HSKTPS.Recording.Note>
 
   <HSKTPS.RotStorage.Label>Fast storage lookup for rotting items</HSKTPS.RotStorage.Label>
   <HSKTPS.RotStorage.Desc>HSK Core searched for the storage of every rotting item by scanning all stockpiles. Now it is a single cell lookup.</HSKTPS.RotStorage.Desc>
@@ -38,4 +38,81 @@
   <HSKTPS.StatCache.Desc>The most expensive pawn stats are recomputed from scratch on every lookup: comfortable temperature (walks all apparel), psychic sensitivity, global work speed, CE carry capacity and others — tens of ms/s together. The game can cache them, but trusts the cache for at most 1 tick. This fix raises that trust to ~2 seconds: a change of apparel, bionics or genes shows in the stat with that delay, otherwise the values are the same. The stat list is editable in config.txt (stat_cache_stats); move speed and market value are deliberately excluded.</HSKTPS.StatCache.Desc>
 
   <HSKTPS.Multiplayer.Restricted>While Multiplayer is active, interactive map settings remain available. Other switches use their original default values and cannot be changed.</HSKTPS.Multiplayer.Restricted>
+
+  <!-- Profiler report viewer (Ctrl+F11) -->
+  <HSKTPS.Viewer.AutoOpen.Label>Open the report viewer after a capture</HSKTPS.Viewer.AutoOpen.Label>
+  <HSKTPS.Viewer.AutoOpen.Desc>When a Ctrl+F9 capture is finished and saved, a window with charts opens. Ctrl+F11 opens it by hand.</HSKTPS.Viewer.AutoOpen.Desc>
+  <HSKTPS.Viewer.OpenButton>Open the report viewer (Ctrl+F11)</HSKTPS.Viewer.OpenButton>
+  <HSKTPS.Viewer.NoReports>No reports yet. Start a capture in game with Ctrl+F9 and the charts will show up here.</HSKTPS.Viewer.NoReports>
+  <HSKTPS.Viewer.NoReportSelected>No report selected</HSKTPS.Viewer.NoReportSelected>
+  <HSKTPS.Viewer.LoadFailed>The report was not read completely: {0}</HSKTPS.Viewer.LoadFailed>
+  <HSKTPS.Viewer.OpenFolder>Open folder</HSKTPS.Viewer.OpenFolder>
+  <HSKTPS.Viewer.Hotkeys>Ctrl+F9 - new capture, Ctrl+F11 - open/close this window</HSKTPS.Viewer.Hotkeys>
+  <HSKTPS.Viewer.Captured>{0} s recorded, {1} frames, {2} ticks</HSKTPS.Viewer.Captured>
+  <HSKTPS.Viewer.Speed>speed {0}</HSKTPS.Viewer.Speed>
+  <HSKTPS.Viewer.StoppedBy>stopped by: {0}</HSKTPS.Viewer.StoppedBy>
+
+  <HSKTPS.Viewer.Tab.Overview>Overview</HSKTPS.Viewer.Tab.Overview>
+  <HSKTPS.Viewer.Tab.Mods>Mods</HSKTPS.Viewer.Tab.Mods>
+  <HSKTPS.Viewer.Tab.Methods>Methods</HSKTPS.Viewer.Tab.Methods>
+  <HSKTPS.Viewer.Tab.Defs>Things (defs)</HSKTPS.Viewer.Tab.Defs>
+
+  <HSKTPS.Viewer.Tile.Tps>TPS (ticks per second)</HSKTPS.Viewer.Tile.Tps>
+  <HSKTPS.Viewer.Tile.Fps>FPS</HSKTPS.Viewer.Tile.Fps>
+  <HSKTPS.Viewer.Tile.FrameAvg>average frame, ms</HSKTPS.Viewer.Tile.FrameAvg>
+  <HSKTPS.Viewer.Tile.FrameP99>worst 1% of frames, ms</HSKTPS.Viewer.Tile.FrameP99>
+  <HSKTPS.Viewer.Tile.TickAvg>average tick, ms</HSKTPS.Viewer.Tile.TickAvg>
+  <HSKTPS.Viewer.Tile.TickWorst>worst tick, ms</HSKTPS.Viewer.Tile.TickWorst>
+  <HSKTPS.Viewer.Tile.Overhead>capture cost, ms/s</HSKTPS.Viewer.Tile.Overhead>
+  <HSKTPS.Viewer.TileTip.0>How many simulation ticks the game managed per second. At 1x speed the target is 60; at top speed, whatever the CPU can do.</HSKTPS.Viewer.TileTip.0>
+  <HSKTPS.Viewer.TileTip.1>Frames per second during the capture.</HSKTPS.Viewer.TileTip.1>
+  <HSKTPS.Viewer.TileTip.2>Average frame time. 16.7 ms = 60 FPS, 33.3 ms = 30 FPS.</HSKTPS.Viewer.TileTip.2>
+  <HSKTPS.Viewer.TileTip.3>99th percentile: 1% of frames took longer than this. These are the stutters you feel. Yellow - over 33 ms, orange - over 50, red - over 100.</HSKTPS.Viewer.TileTip.3>
+  <HSKTPS.Viewer.TileTip.4>Average time of one tick with everything that runs in it (capture overhead included).</HSKTPS.Viewer.TileTip.4>
+  <HSKTPS.Viewer.TileTip.5>The longest single tick of the capture.</HSKTPS.Viewer.TileTip.5>
+  <HSKTPS.Viewer.TileTip.6>How many milliseconds per second the capture itself cost. It is already subtracted from the method and mod tables, but the game ran slower than usual while recording.</HSKTPS.Viewer.TileTip.6>
+
+  <HSKTPS.Viewer.Budget.Title>What an average frame is made of ({0} ms)</HSKTPS.Viewer.Budget.Title>
+  <HSKTPS.Viewer.Budget.Ticks>ticks</HSKTPS.Viewer.Budget.Ticks>
+  <HSKTPS.Viewer.Budget.Update>frame logic</HSKTPS.Viewer.Budget.Update>
+  <HSKTPS.Viewer.Budget.Gui>interface</HSKTPS.Viewer.Budget.Gui>
+  <HSKTPS.Viewer.Budget.Rest>rendering, GPU, engine</HSKTPS.Viewer.Budget.Rest>
+  <HSKTPS.Viewer.Budget.Hint>If the grey part is large and the others are small, the limit is rendering or the graphics card, not mods.</HSKTPS.Viewer.Budget.Hint>
+
+  <HSKTPS.Viewer.Chart.Frames>Time of every frame, ms ({0} frames; a white cap marks a frame above the scale)</HSKTPS.Viewer.Chart.Frames>
+  <HSKTPS.Viewer.Chart.FramesFallback>Frame time per second, ms: blue - average, orange - worst frame</HSKTPS.Viewer.Chart.FramesFallback>
+  <HSKTPS.Viewer.Chart.Tps>Ticks in each second</HSKTPS.Viewer.Chart.Tps>
+  <HSKTPS.Viewer.Chart.Load>Where each second went, ms</HSKTPS.Viewer.Chart.Load>
+  <HSKTPS.Viewer.WholeSecond>the whole second</HSKTPS.Viewer.WholeSecond>
+  <HSKTPS.Viewer.Gc2>full garbage collection (GC2)</HSKTPS.Viewer.Gc2>
+  <HSKTPS.Viewer.Hover.Frame>Frame {0}: {1} ms (at {2} s)</HSKTPS.Viewer.Hover.Frame>
+  <HSKTPS.Viewer.Hover.Second>Second {0}: {1} ticks, {2} frames, average frame {3} ms, worst {4} ms</HSKTPS.Viewer.Hover.Second>
+  <HSKTPS.Viewer.Hover.SecondLoad>Ticks {0} ms, frame logic {1} ms, interface {2} ms</HSKTPS.Viewer.Hover.SecondLoad>
+  <HSKTPS.Viewer.Hover.SecondGc>Garbage collections GC0/1/2: {0}, memory {1} MB, speed {2}</HSKTPS.Viewer.Hover.SecondGc>
+  <HSKTPS.Viewer.Context>Game state at the start of the capture</HSKTPS.Viewer.Context>
+
+  <HSKTPS.Viewer.Cat.Tick>Tick (simulation)</HSKTPS.Viewer.Cat.Tick>
+  <HSKTPS.Viewer.Cat.Update>Frame (Update, drawing)</HSKTPS.Viewer.Cat.Update>
+  <HSKTPS.Viewer.Cat.GUI>Interface (GUI)</HSKTPS.Viewer.Cat.GUI>
+  <HSKTPS.Viewer.Cat.Harmony>Harmony patches</HSKTPS.Viewer.Cat.Harmony>
+
+  <HSKTPS.Viewer.Col.MsS>ms/s</HSKTPS.Viewer.Col.MsS>
+  <HSKTPS.Viewer.Col.Pct>share</HSKTPS.Viewer.Col.Pct>
+  <HSKTPS.Viewer.Col.CallsS>calls/s</HSKTPS.Viewer.Col.CallsS>
+  <HSKTPS.Viewer.Col.UsCall>us/call</HSKTPS.Viewer.Col.UsCall>
+  <HSKTPS.Viewer.Col.Worst>worst, ms</HSKTPS.Viewer.Col.Worst>
+  <HSKTPS.Viewer.Col.Content>content</HSKTPS.Viewer.Col.Content>
+
+  <HSKTPS.Viewer.Mods.Hint>Each mod's own code time in ms per real second (1000 = the whole second). "Content" is the time spent on things and hediffs from that mod (it overlaps with the rest, do not add them up). Click a mod to see its methods.</HSKTPS.Viewer.Mods.Hint>
+  <HSKTPS.Viewer.Mods.Tip>{0}\n\nTotal: {1} ms/s\nTick: {2}, frame: {3}, interface: {4}, Harmony: {5}\nCalls per second: {6}\nWorst call: {7} ms\nContent (this mod's things): {8} ms/s\nMost expensive method: {9}\n\nClick to show the mod's methods.</HSKTPS.Viewer.Mods.Tip>
+
+  <HSKTPS.Viewer.Search>Search: method, mod, type, def...</HSKTPS.Viewer.Search>
+  <HSKTPS.Viewer.ExpandAll>Expand all</HSKTPS.Viewer.ExpandAll>
+  <HSKTPS.Viewer.CollapseAll>Collapse all</HSKTPS.Viewer.CollapseAll>
+  <HSKTPS.Viewer.ClearSearch>Clear</HSKTPS.Viewer.ClearSearch>
+  <HSKTPS.Viewer.Methods.Hint>Category → mod → method. Times are exclusive (nested measured methods excluded), so rows add up; {0} ms/s in total. Click a method to copy its name. Click a column header to change the sort.</HSKTPS.Viewer.Methods.Hint>
+  <HSKTPS.Viewer.Defs.Hint>Kind → mod → def: which things, hediffs and jobs the tick and frame time went to (all mods' code together); {0} ms/s in total. Click a def to copy its name.</HSKTPS.Viewer.Defs.Hint>
+  <HSKTPS.Viewer.Empty>This report has no such data.</HSKTPS.Viewer.Empty>
+  <HSKTPS.Viewer.NothingFound>Nothing found.</HSKTPS.Viewer.NothingFound>
+  <HSKTPS.Viewer.LeafTip>Mod: {0}\nHook group: {1}\n{2} ms/s, {3} calls/s, {4} us per call, worst call {5} ms\n\nClick to copy the name.</HSKTPS.Viewer.LeafTip>
 </LanguageData>

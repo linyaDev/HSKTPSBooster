@@ -71,25 +71,14 @@ namespace HSKPerformance
 
         // ------------------------------------------------------------------ start
 
-        /// <summary>0 = single recording, 1 = light half of a two-phase run, 2 = full half of a two-phase run.</summary>
-        public static int Phase;
-
-        /// <summary>Ctrl+F9: with two_phase on, a light recording first and, when it ends by itself, a full one right after.</summary>
+        /// <summary>Ctrl+F9: one full recording.</summary>
         public static void Start()
         {
             if (State != SessionState.Idle) return;
-            StartPhase(ProbeConfig.Load().TwoPhase ? 1 : 0);
-        }
-
-        static void StartPhase(int phase)
-        {
-            if (State != SessionState.Idle) return;
-            Phase = phase;
+            LastReportDir = null;
             try
             {
                 Cfg = ProbeConfig.Load();
-                if (phase == 1) Cfg.LightMode = true;
-                else if (phase == 2) Cfg.LightMode = false;
                 ModMap.Build();
                 HookCatalog.Build(Cfg);
                 harmony = new Harmony(ProbeCore.HarmonyId);
@@ -181,7 +170,7 @@ namespace HSKPerformance
             warmEndReal = now + Cfg.WarmupSeconds;
             CaptureStartReal = now;
             State = SessionState.Warmup;
-            PerfLog.Info("mode: " + (Cfg.LightMode ? "LIGHT (vanilla roots and per-frame internals)" : "FULL (all hooks)") + ". hooks installed: " + HookCatalog.PatchedOk + " ok, " + HookCatalog.PatchedFail + " failed ("
+            PerfLog.Info("hooks installed: " + HookCatalog.PatchedOk + " ok, " + HookCatalog.PatchedFail + " failed ("
                 + HookCatalog.InstallMs.ToString("F0", CultureInfo.InvariantCulture) + " ms of patching). Warming up "
                 + Cfg.WarmupSeconds + " s, then recording " + Cfg.DurationSeconds + " s (Ctrl+F9 stops early).");
             if (Cfg.WarmupSeconds <= 0) BeginCapture(now);
@@ -262,7 +251,8 @@ namespace HSKPerformance
                 {
                     EndContext = ProbeReport.Context();
                     string dir = ProbeReport.Write();
-                    LastMessage = "Report saved: " + dir;
+                    LastReportDir = dir;
+                    LastMessage = "Report saved: " + dir + "   (Ctrl+F11 = viewer)";
                     PerfLog.Info(LastMessage);
                 }
                 catch (Exception e)
@@ -276,26 +266,22 @@ namespace HSKPerformance
                 LastMessage = "Stopped before any data was captured.";
             }
             LastMessageUntil = now + 45;
-            // the second half only follows when the first one ran to its end; a manual stop cancels the whole run
-            chainNext = Phase == 1 && reason.StartsWith("timeout", StringComparison.Ordinal) && Frames > 0;
-            if (Phase != 0 && !chainNext && Phase == 1) LastMessage += "  (second half cancelled)";
             BeginRemove();
         }
 
-        static bool chainNext;
+        /// <summary>Folder of the report saved by the current run (null until one is written); the viewer opens it once the run is over.</summary>
+        public static string LastReportDir;
 
         /// <summary>Called when the hooks of a finished recording are gone.</summary>
         static void OnIdle()
         {
-            if (!chainNext) { if (Phase == 2) LastMessage = "Both recordings are saved (light, then full). " + LastMessage; Phase = 0; return; }
-            chainNext = false;
-            PerfLog.Info("light half done, starting the full half.");
-            StartPhase(2);
+            // the whole run is over and every hook is gone, so the viewer's own drawing is not measured
+            if (LastReportDir != null && Cfg != null && Cfg.OpenViewerAfterReport) ReportViewer.RequestOpen(LastReportDir);
+            LastReportDir = null;
         }
 
         public static void Abort(string why)
         {
-            chainNext = false; Phase = 0;
             ProbeCore.Active = false;
             LastMessage = "HSK TPS Booster aborted: " + why;
             LastMessageUntil = Time.realtimeSinceStartup + 30;
@@ -335,11 +321,6 @@ namespace HSKPerformance
 
         // ------------------------------------------------------------------ overlay
 
-        static string PhaseLabel()
-        {
-            return Phase == 1 ? " 1/2 (light)" : Phase == 2 ? " 2/2 (full)" : "";
-        }
-
         public static string Overlay(double now)
         {
             switch (State)
@@ -349,8 +330,8 @@ namespace HSKPerformance
                 case SessionState.Warmup:
                     return "HSK TPS Booster: warming up... (Ctrl+F9 cancels)";
                 case SessionState.Recording:
-                    return "HSK TPS Booster REC" + PhaseLabel() + " " + ElapsedCapture(now).ToString("F0", CultureInfo.InvariantCulture) + "/" + Cfg.DurationSeconds
-                        + " s  -  Ctrl+F9 = stop and save" + (Phase == 1 ? " (cancels the full half)" : "");
+                    return "HSK TPS Booster REC " + ElapsedCapture(now).ToString("F0", CultureInfo.InvariantCulture) + "/" + Cfg.DurationSeconds
+                        + " s  -  Ctrl+F9 = stop and save";
                 case SessionState.Removing:
                     return (string.IsNullOrEmpty(LastMessage) ? "" : LastMessage + "   |   ") + "removing hooks " + cursor + "/" + removeUpTo;
             }

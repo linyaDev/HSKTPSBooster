@@ -27,14 +27,6 @@ namespace HSKPerformance
                         default: ProbeSession.Stop("hotkey"); break;
                     }
                 }
-                if (ctrl && Input.GetKeyDown(KeyCode.F8) && ProbeSession.State == SessionState.Idle)
-                {
-                    var c = ProbeConfig.Load();
-                    c.LightMode = !c.LightMode;
-                    c.Save();
-                    PerfLog.Info("light mode " + (c.LightMode ? "ON" : "OFF") + " (Ctrl+F8), applies to the next recording.");
-                    ProbeSession.Notify("Лёгкий режим " + (c.LightMode ? "включён: хукаются корни и методы кадра, почти без нагрузки." : "выключен: полный замер."), 8);
-                }
                 if (ctrl && Input.GetKeyDown(KeyCode.F10))
                 {
                     string msg = WorldPawnDump.WriteStandalone();
@@ -46,7 +38,10 @@ namespace HSKPerformance
                     if (live.Length > 0) PerfLog.Info(live);
                     ProbeSession.Notify(msg + (live.Length > 0 ? "   |   " + live : ""));
                 }
+                if (ctrl && Input.GetKeyDown(KeyCode.F11) && ProbeSession.State == SessionState.Idle)
+                    ReportViewer.Toggle();
                 ProbeSession.OnFrame(Time.unscaledDeltaTime, Time.realtimeSinceStartup);
+                if (ProbeSession.State == SessionState.Idle) ReportViewer.Pump();
             }
             catch (Exception e)
             {

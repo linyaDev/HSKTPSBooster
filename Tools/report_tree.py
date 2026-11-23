@@ -4,7 +4,7 @@
 report_tree.py — build a self-contained, interactive HTML tree from an HSK TPS Booster
 profiler dump.
 
-The profiler (Ctrl+F9) writes report-<timestamp>-<light|full>/ folders with report.md,
+The profiler (Ctrl+F9) writes report-<timestamp>/ folders with report.md,
 methods.csv and defs.csv. This tool turns them into one static HTML page with two views:
 
   * "По методам"  — collapsible Category -> Mod -> Method tree (methods.csv).

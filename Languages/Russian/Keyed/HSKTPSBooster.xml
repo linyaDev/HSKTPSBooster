@@ -3,7 +3,7 @@
 
   <HSKTPS.Fixes.Header>Исправления (действуют сразу, перезапуск не нужен)</HSKTPS.Fixes.Header>
   <HSKTPS.Experimental.Header>Я хочу больше ТПС и готов немного рискнуть. ЛЮБОЙ ЦЕНОЙ, НО БЕСПЛАТНО</HSKTPS.Experimental.Header>
-  <HSKTPS.Recording.Note>Запись производительности: Ctrl+F9. Остальные параметры (длительность записи, цвета карты, пороги скорости) в config.txt: {0}</HSKTPS.Recording.Note>
+  <HSKTPS.Recording.Note>Запись производительности: Ctrl+F9, просмотр отчётов: Ctrl+F11. Остальные параметры (длительность записи, цвета карты, пороги скорости) в config.txt: {0}</HSKTPS.Recording.Note>
 
   <HSKTPS.RotStorage.Label>Быстрый поиск склада для гниения</HSKTPS.RotStorage.Label>
   <HSKTPS.RotStorage.Desc>HSK Core искал склад для каждой гниющей вещи перебором всех хранилищ. Теперь это одна проверка клетки.</HSKTPS.RotStorage.Desc>
@@ -38,4 +38,81 @@
   <HSKTPS.StatCache.Desc>Самые дорогие статы пешек пересчитываются заново при каждом обращении: комфортная температура (перебор всей одежды), псионическая чувствительность, общая скорость работы, грузоподъёмность CE и другие — вместе десятки мс/с. Игра умеет их кешировать, но доверяет кэшу максимум 1 тик. Фикс продлевает доверие до ~2 секунд: смена одежды, бионика или ген отражаются на стате с такой задержкой, в остальном значения те же. Список статов правится в config.txt (stat_cache_stats); скорость передвижения и рыночная стоимость в него сознательно не входят.</HSKTPS.StatCache.Desc>
 
   <HSKTPS.Multiplayer.Restricted>При активном Multiplayer доступны настройки интерактивной карты. Остальные переключатели сохраняют исходные значения по умолчанию и недоступны для изменения.</HSKTPS.Multiplayer.Restricted>
+
+  <!-- Просмотр отчётов профилировщика (Ctrl+F11) -->
+  <HSKTPS.Viewer.AutoOpen.Label>Открывать просмотр отчёта после записи</HSKTPS.Viewer.AutoOpen.Label>
+  <HSKTPS.Viewer.AutoOpen.Desc>Когда запись по Ctrl+F9 закончена и сохранена, сразу открывается окно с графиками. Вручную окно открывается по Ctrl+F11.</HSKTPS.Viewer.AutoOpen.Desc>
+  <HSKTPS.Viewer.OpenButton>Открыть просмотр отчётов (Ctrl+F11)</HSKTPS.Viewer.OpenButton>
+  <HSKTPS.Viewer.NoReports>Отчётов пока нет. Запустите запись в игре по Ctrl+F9 - после неё здесь появятся графики.</HSKTPS.Viewer.NoReports>
+  <HSKTPS.Viewer.NoReportSelected>Отчёт не выбран</HSKTPS.Viewer.NoReportSelected>
+  <HSKTPS.Viewer.LoadFailed>Отчёт прочитан не полностью: {0}</HSKTPS.Viewer.LoadFailed>
+  <HSKTPS.Viewer.OpenFolder>Открыть папку</HSKTPS.Viewer.OpenFolder>
+  <HSKTPS.Viewer.Hotkeys>Ctrl+F9 - новая запись, Ctrl+F11 - открыть/закрыть это окно</HSKTPS.Viewer.Hotkeys>
+  <HSKTPS.Viewer.Captured>запись {0} с, {1} кадров, {2} тиков</HSKTPS.Viewer.Captured>
+  <HSKTPS.Viewer.Speed>скорость {0}</HSKTPS.Viewer.Speed>
+  <HSKTPS.Viewer.StoppedBy>остановлено: {0}</HSKTPS.Viewer.StoppedBy>
+
+  <HSKTPS.Viewer.Tab.Overview>Обзор</HSKTPS.Viewer.Tab.Overview>
+  <HSKTPS.Viewer.Tab.Mods>Моды</HSKTPS.Viewer.Tab.Mods>
+  <HSKTPS.Viewer.Tab.Methods>Методы</HSKTPS.Viewer.Tab.Methods>
+  <HSKTPS.Viewer.Tab.Defs>Вещи (дефы)</HSKTPS.Viewer.Tab.Defs>
+
+  <HSKTPS.Viewer.Tile.Tps>TPS (тиков в секунду)</HSKTPS.Viewer.Tile.Tps>
+  <HSKTPS.Viewer.Tile.Fps>FPS</HSKTPS.Viewer.Tile.Fps>
+  <HSKTPS.Viewer.Tile.FrameAvg>кадр в среднем, мс</HSKTPS.Viewer.Tile.FrameAvg>
+  <HSKTPS.Viewer.Tile.FrameP99>1% худших кадров, мс</HSKTPS.Viewer.Tile.FrameP99>
+  <HSKTPS.Viewer.Tile.TickAvg>тик в среднем, мс</HSKTPS.Viewer.Tile.TickAvg>
+  <HSKTPS.Viewer.Tile.TickWorst>худший тик, мс</HSKTPS.Viewer.Tile.TickWorst>
+  <HSKTPS.Viewer.Tile.Overhead>замер съел, мс/с</HSKTPS.Viewer.Tile.Overhead>
+  <HSKTPS.Viewer.TileTip.0>Сколько тиков симуляции игра успевала в секунду. На скорости x1 цель - 60, на максимальной - сколько вытянет процессор.</HSKTPS.Viewer.TileTip.0>
+  <HSKTPS.Viewer.TileTip.1>Кадров в секунду за время записи.</HSKTPS.Viewer.TileTip.1>
+  <HSKTPS.Viewer.TileTip.2>Среднее время кадра. 16.7 мс = 60 FPS, 33.3 мс = 30 FPS.</HSKTPS.Viewer.TileTip.2>
+  <HSKTPS.Viewer.TileTip.3>99-й перцентиль: 1% кадров были дольше этого. Это и есть ощущаемые подлагивания. Жёлтый - больше 33 мс, оранжевый - больше 50, красный - больше 100.</HSKTPS.Viewer.TileTip.3>
+  <HSKTPS.Viewer.TileTip.4>Среднее время одного тика со всем, что в нём выполняется (вместе с накладными расходами замера).</HSKTPS.Viewer.TileTip.4>
+  <HSKTPS.Viewer.TileTip.5>Самый долгий одиночный тик за запись.</HSKTPS.Viewer.TileTip.5>
+  <HSKTPS.Viewer.TileTip.6>Сколько миллисекунд в секунду стоил сам замер. Это уже вычтено из таблиц методов и модов, но игра во время записи шла медленнее обычного.</HSKTPS.Viewer.TileTip.6>
+
+  <HSKTPS.Viewer.Budget.Title>Из чего состоит средний кадр ({0} мс)</HSKTPS.Viewer.Budget.Title>
+  <HSKTPS.Viewer.Budget.Ticks>тики</HSKTPS.Viewer.Budget.Ticks>
+  <HSKTPS.Viewer.Budget.Update>логика кадра</HSKTPS.Viewer.Budget.Update>
+  <HSKTPS.Viewer.Budget.Gui>интерфейс</HSKTPS.Viewer.Budget.Gui>
+  <HSKTPS.Viewer.Budget.Rest>отрисовка, видеокарта, движок</HSKTPS.Viewer.Budget.Rest>
+  <HSKTPS.Viewer.Budget.Hint>Если серая часть большая, а остальные маленькие, упор не в моды, а в отрисовку или видеокарту.</HSKTPS.Viewer.Budget.Hint>
+
+  <HSKTPS.Viewer.Chart.Frames>Время каждого кадра, мс ({0} кадров; белая полоска сверху - кадр выше шкалы)</HSKTPS.Viewer.Chart.Frames>
+  <HSKTPS.Viewer.Chart.FramesFallback>Время кадра по секундам, мс: синее - среднее, оранжевое - худший кадр</HSKTPS.Viewer.Chart.FramesFallback>
+  <HSKTPS.Viewer.Chart.Tps>Тиков за каждую секунду</HSKTPS.Viewer.Chart.Tps>
+  <HSKTPS.Viewer.Chart.Load>На что ушла каждая секунда, мс</HSKTPS.Viewer.Chart.Load>
+  <HSKTPS.Viewer.WholeSecond>вся секунда</HSKTPS.Viewer.WholeSecond>
+  <HSKTPS.Viewer.Gc2>полная сборка мусора (GC2)</HSKTPS.Viewer.Gc2>
+  <HSKTPS.Viewer.Hover.Frame>Кадр {0}: {1} мс (на {2} с записи)</HSKTPS.Viewer.Hover.Frame>
+  <HSKTPS.Viewer.Hover.Second>Секунда {0}: {1} тиков, {2} кадров, кадр в среднем {3} мс, худший {4} мс</HSKTPS.Viewer.Hover.Second>
+  <HSKTPS.Viewer.Hover.SecondLoad>Тики {0} мс, логика кадра {1} мс, интерфейс {2} мс</HSKTPS.Viewer.Hover.SecondLoad>
+  <HSKTPS.Viewer.Hover.SecondGc>Сборки мусора GC0/1/2: {0}, память {1} МБ, скорость {2}</HSKTPS.Viewer.Hover.SecondGc>
+  <HSKTPS.Viewer.Context>Состояние игры в начале записи</HSKTPS.Viewer.Context>
+
+  <HSKTPS.Viewer.Cat.Tick>Тик (симуляция)</HSKTPS.Viewer.Cat.Tick>
+  <HSKTPS.Viewer.Cat.Update>Кадр (Update, рисование)</HSKTPS.Viewer.Cat.Update>
+  <HSKTPS.Viewer.Cat.GUI>Интерфейс (GUI)</HSKTPS.Viewer.Cat.GUI>
+  <HSKTPS.Viewer.Cat.Harmony>Патчи Harmony</HSKTPS.Viewer.Cat.Harmony>
+
+  <HSKTPS.Viewer.Col.MsS>мс/с</HSKTPS.Viewer.Col.MsS>
+  <HSKTPS.Viewer.Col.Pct>доля</HSKTPS.Viewer.Col.Pct>
+  <HSKTPS.Viewer.Col.CallsS>вызовов/с</HSKTPS.Viewer.Col.CallsS>
+  <HSKTPS.Viewer.Col.UsCall>мкс/вызов</HSKTPS.Viewer.Col.UsCall>
+  <HSKTPS.Viewer.Col.Worst>худший, мс</HSKTPS.Viewer.Col.Worst>
+  <HSKTPS.Viewer.Col.Content>контент</HSKTPS.Viewer.Col.Content>
+
+  <HSKTPS.Viewer.Mods.Hint>Собственное время кода каждого мода в мс за секунду реального времени (1000 = вся секунда). "Контент" - время, потраченное на вещи и болезни из этого мода (пересекается с остальным, не складывать). Клик по моду - его методы.</HSKTPS.Viewer.Mods.Hint>
+  <HSKTPS.Viewer.Mods.Tip>{0}\n\nВсего: {1} мс/с\nТик: {2}, кадр: {3}, интерфейс: {4}, Harmony: {5}\nВызовов в секунду: {6}\nХудший вызов: {7} мс\nКонтент (вещи этого мода): {8} мс/с\nСамый дорогой метод: {9}\n\nКлик - показать методы мода.</HSKTPS.Viewer.Mods.Tip>
+
+  <HSKTPS.Viewer.Search>Поиск: метод, мод, тип, деф...</HSKTPS.Viewer.Search>
+  <HSKTPS.Viewer.ExpandAll>Раскрыть всё</HSKTPS.Viewer.ExpandAll>
+  <HSKTPS.Viewer.CollapseAll>Свернуть всё</HSKTPS.Viewer.CollapseAll>
+  <HSKTPS.Viewer.ClearSearch>Сбросить</HSKTPS.Viewer.ClearSearch>
+  <HSKTPS.Viewer.Methods.Hint>Категория → мод → метод. Время собственное (без вложенных замеренных методов), поэтому строки можно складывать; всего {0} мс/с. Клик по методу копирует его имя. Клик по заголовку столбца меняет сортировку.</HSKTPS.Viewer.Methods.Hint>
+  <HSKTPS.Viewer.Defs.Hint>Тип → мод → деф: на какие вещи, болезни и работы ушло время тика и кадра (код всех модов вместе); всего {0} мс/с. Клик по дефу копирует его имя.</HSKTPS.Viewer.Defs.Hint>
+  <HSKTPS.Viewer.Empty>В этом отчёте нет таких данных.</HSKTPS.Viewer.Empty>
+  <HSKTPS.Viewer.NothingFound>Ничего не найдено.</HSKTPS.Viewer.NothingFound>
+  <HSKTPS.Viewer.LeafTip>Мод: {0}\nГруппа хуков: {1}\n{2} мс/с, {3} вызовов/с, {4} мкс за вызов, худший вызов {5} мс\n\nКлик - скопировать имя.</HSKTPS.Viewer.LeafTip>
 </LanguageData>

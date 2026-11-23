@@ -17,11 +17,10 @@ namespace HSKPerformance
         public bool HookHarmony = true;
         public bool HookVanillaInternals = true; // name the parts of DoSingleTick, MapPreTick/PostTick and WorldTick
         public bool HookPawnTrackers = true;     // name the trackers inside Pawn.Tick/TickInterval (many calls, more overhead)
-        public bool TwoPhase = true;             // one Ctrl+F9 = light recording, then automatically a full one (LightMode is then forced by the session)
-        public bool LightMode = false;           // only the three vanilla roots are hooked: almost no probe overhead, no per-mod numbers
         public int TopMods = 40;
         public int TopMethods = 60;
         public int TopDefs = 30;
+        public bool OpenViewerAfterReport = true; // open the in-game report viewer once a recording (both halves of a two-phase run) is saved
 
         // ---- fixes (applied at game start, independent of recording) ----
         public bool FixRotStorage = true;      // O(1) storage lookup in Core_SK's CompBetterRottable_Patch
@@ -82,7 +81,7 @@ namespace HSKPerformance
 
         static string B(bool v) { return v ? "true" : "false"; }
 
-        /// <summary>Writes every key back (used by the mod settings window and the Ctrl+F8 shortcut).</summary>
+        /// <summary>Writes every key back (used by the mod settings window).</summary>
         public void Save()
         {
             try
@@ -98,11 +97,10 @@ namespace HSKPerformance
                     "hook_harmony_patches=" + B(HookHarmony) + "\n" +
                     "hook_vanilla_internals=" + B(HookVanillaInternals) + "\n" +
                     "hook_pawn_trackers=" + B(HookPawnTrackers) + "\n" +
-                    "two_phase=" + B(TwoPhase) + "\n" +
-                    "light_mode=" + B(LightMode) + "\n" +
                     "top_mods=" + TopMods.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "top_methods=" + TopMethods.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "top_defs=" + TopDefs.ToString(CultureInfo.InvariantCulture) + "\n" +
+                    "open_viewer_after_report=" + B(OpenViewerAfterReport) + "\n" +
                     "fix_rot_storage=" + B(FixRotStorage) + "\n" +
                     "fix_rot_verify_calls=" + FixRotVerifyCalls.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "world_pawn_rows=" + WorldPawnRows.ToString(CultureInfo.InvariantCulture) + "\n" +
@@ -170,11 +168,10 @@ namespace HSKPerformance
                         "hook_harmony_patches=true\n" +
                         "hook_vanilla_internals=true\n" +
                         "hook_pawn_trackers=true\n" +
-                        "two_phase=true\n" +
-                        "light_mode=false\n" +
                         "top_mods=40\n" +
                         "top_methods=60\n" +
                         "top_defs=30\n" +
+                        "open_viewer_after_report=true\n" +
                         "fix_rot_storage=true\n" +
                         "fix_rot_verify_calls=1000\n" +
                         "world_pawn_rows=300\n" +
@@ -236,10 +233,9 @@ namespace HSKPerformance
                         case "hook_harmony_patches": if (bool.TryParse(v, out b)) c.HookHarmony = b; break;
                         case "hook_vanilla_internals": if (bool.TryParse(v, out b)) c.HookVanillaInternals = b; break;
                         case "hook_pawn_trackers": if (bool.TryParse(v, out b)) c.HookPawnTrackers = b; break;
-                        case "two_phase": if (bool.TryParse(v, out b)) c.TwoPhase = b; break;
-                        case "light_mode": if (bool.TryParse(v, out b)) c.LightMode = b; break;
                         case "top_mods": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n > 0) c.TopMods = n; break;
                         case "top_methods": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n > 0) c.TopMethods = n; break;
+                        case "open_viewer_after_report": if (bool.TryParse(v, out b)) c.OpenViewerAfterReport = b; break;
                         case "top_defs": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n > 0) c.TopDefs = n; break;
                         case "fix_rot_storage": if (bool.TryParse(v, out b)) c.FixRotStorage = b; break;
                         case "fix_rot_verify_calls": if (int.TryParse(v, NumberStyles.Integer, CultureInfo.InvariantCulture, out n) && n >= 0) c.FixRotVerifyCalls = n; break;

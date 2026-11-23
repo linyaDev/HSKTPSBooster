@@ -87,7 +87,7 @@ namespace HSKPerformance
         public static string Write()
         {
             var cfg = ProbeSession.Cfg;
-            string dir = Path.Combine(ProbeConfig.Dir, "report-" + ProbeSession.StartedAt.ToString("yyyyMMdd-HHmmss", Inv) + (ProbeSession.Phase == 1 ? "-light" : ProbeSession.Phase == 2 ? "-full" : ""));
+            string dir = Path.Combine(ProbeConfig.Dir, "report-" + ProbeSession.StartedAt.ToString("yyyyMMdd-HHmmss", Inv));
             Directory.CreateDirectory(dir);
 
             double toMs = 1000.0 / Stopwatch.Frequency;
@@ -189,8 +189,6 @@ namespace HSKPerformance
                 + " ms/s, so **" + F(overheadPerSec, 0) + " ms/s** (" + F(overheadPerSec / 10.0, 1) + " % of wall) was measurement overhead and has been subtracted from every row (raw values are in methods.csv). "
                 + "The game still ran slower than normal while recording, and inclusive numbers (frame budget, timeline) still contain the overhead.");
             sb.AppendLine("- Empty methods skipped (nothing to measure): " + HookCatalog.EmptySkipped);
-            sb.AppendLine("- Mode: **" + (cfg.LightMode ? "LIGHT" : "FULL") + "**" + (ProbeSession.Phase == 1 ? " (half 1 of 2 of an automatic light+full run)" : ProbeSession.Phase == 2 ? " (half 2 of 2, right after the light half)" : ""));
-            if (cfg.LightMode) sb.AppendLine("- **Light mode**: only the vanilla roots and about 100 per-frame vanilla methods are hooked (a few thousand calls per second), so the probe overhead is tiny and the frame numbers are close to a normal run. Mod hooks are off on purpose, so per-mod tables are empty; the method table shows the vanilla frame parts. Inclusive time of GameComponentUpdate, MapComponentUpdate and MapComponentTick covers all components of all mods.");
             if (Safe(() => ModsConfig.IsActive("dubwise.dubsperformanceanalyzer.steam")) == "True")
                 sb.AppendLine("- Note: Dubs Performance Analyzer is enabled. Its own patches were left out of the Harmony rows, but keep it closed while recording so its overhead does not add up with ours.");
             if (ticks == 0) sb.AppendLine("- **Warning: no ticks were recorded** (game paused, or not in a running game). Tick numbers are meaningless in this report.");
@@ -458,6 +456,44 @@ namespace HSKPerformance
             foreach (var r in ProbeSession.Rows)
                 csv.AppendLine(string.Join(",", new[] { F(r.T, 1), r.Ticks.ToString(Inv), r.Frames.ToString(Inv), F(r.AvgFrameMs, 3), F(r.MaxFrameMs, 3), F(r.TickMs, 3), F(r.UpdateMs, 3), F(r.GuiMs, 3), r.Gc0.ToString(Inv), r.Gc1.ToString(Inv), r.Gc2.ToString(Inv), F(r.HeapMb, 1), r.Speed }));
             File.WriteAllText(Path.Combine(dir, "timeline.csv"), csv.ToString(), new UTF8Encoding(false));
+
+            // every frame of the capture, in order: the viewer draws spikes from it (the timeline only has per-second max)
+            csv.Clear();
+            csv.AppendLine("t_s,frame_ms");
+            double tAcc = 0;
+            foreach (var f in ProbeSession.FrameMs)
+            {
+                tAcc += f / 1000.0;
+                csv.AppendLine(F(tAcc, 3) + "," + F(f, 3));
+            }
+            File.WriteAllText(Path.Combine(dir, "frames.csv"), csv.ToString(), new UTF8Encoding(false));
+
+            // ---- summary.txt: the headline numbers as key=value, read by the in-game viewer ----
+            var sum = new StringBuilder();
+            Action<string, string> put = (k, v) => sum.Append(k).Append('=').Append((v ?? "").Replace('\n', ' ').Replace('\r', ' ')).Append('\n');
+            put("recorded", ProbeSession.StartedAt.ToString("yyyy-MM-dd HH:mm:ss", Inv));
+            put("stop_reason", ProbeSession.StopReason);
+            put("capture_s", F(secs, 1));
+            put("warmup_s", cfg.WarmupSeconds.ToString(Inv));
+            put("frames", frames.ToString(Inv));
+            put("ticks", ticks.ToString(Inv));
+            put("fps", F(secs > 0 ? frames / secs : 0, 1));
+            put("tps", F(secs > 0 ? ticks / secs : 0, 1));
+            put("measured_ms_s", F(totalMeasuredMs, 1));
+            put("overhead_ms_s", F(overheadPerSec, 1));
+            put("mods_ms_s", F(modsTotal, 1));
+            put("core_ms_s", F(coreTotal, 1));
+            put("frame_avg_ms", F(avgFrame));
+            put("frame_p50_ms", F(p50)); put("frame_p90_ms", F(p90)); put("frame_p95_ms", F(p95)); put("frame_p99_ms", F(p99)); put("frame_max_ms", F(pmax));
+            put("frames_over_33", over33.ToString(Inv)); put("frames_over_50", over50.ToString(Inv)); put("frames_over_100", over100.ToString(Inv));
+            put("budget_update_ms", F(updIncl)); put("budget_tick_ms", F(tickInclPerFrame)); put("budget_gui_ms", F(guiIncl)); put("budget_rest_ms", F(other));
+            if (tickRoot != null && ticks > 0)
+            {
+                put("tick_avg_ms", F(tickRoot.InclTicks * toMs / ticks, 3));
+                put("tick_worst_ms", F(tickRoot.MaxInclTicks * toMs));
+            }
+            foreach (var c in ProbeSession.StartContext ?? new List<string>()) put("context", c);
+            File.WriteAllText(Path.Combine(dir, "summary.txt"), sum.ToString(), new UTF8Encoding(false));
 
             return dir;
         }
